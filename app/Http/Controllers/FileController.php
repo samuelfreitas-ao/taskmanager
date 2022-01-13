@@ -18,10 +18,37 @@ class FileController extends Controller
         TYPE_IMAGE = 'image',
         TYPE_VIDEO = 'video';
 
-
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\File  $file
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        $feedback = ["result" => false, "message" => "", "data" => null];
+        $file = File::find($id);
+        if (!$file) {
+            $feedback["message"] = "O ficheiro que tentou excluir não existe.";
+        } else {
+            $fileName = $file->path;
+            try {
+                $file->delete();
+                self::removeUpload($fileName);
+                $feedback["result"] = true;
+                $feedback["message"] = "Ficheiro {$fileName} excluído com sucesso.";
+            } catch (\Exception $ex) {
+                $feedback["message"] = "Erro ao excluir o ficheiro {$fileName}";
+            }
+        }
+        return response()->json($feedback);
+    }
 
     /**
-     * @param data $data
+     * Upload and store file in database
+     *
+     * @param object $data
+     * @return object Return a json response
      */
     public static function upload($data)
     {
@@ -37,6 +64,23 @@ class FileController extends Controller
             $feeback = self::_uploadAndSave($file, $task_id)->getData();
         }
         return response()->json($feeback);
+    }
+
+    public static function removeUpload($file)
+    {
+        if (is_array($file)) {
+            foreach ($file as  $f) {
+                if (is_object($f)) {
+                    Storage::delete($f->path);
+                } else {
+                    Storage::delete($f);
+                }
+            }
+        } else if (is_object($file)) {
+            Storage::delete($file->path);
+        } else {
+            Storage::delete($file);
+        }
     }
 
     /**

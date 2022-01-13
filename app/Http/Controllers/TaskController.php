@@ -158,7 +158,11 @@ class TaskController extends Controller
                 if ($softDelete) {
                     $task->softDeletes();
                 } else {
+                    $files = $task->files;
                     $task->delete();
+                    if ($files) {
+                        FileController::removeUpload($files);
+                    }
                 }
                 $feedback['result'] = true;
                 $feedback['message'] = 'Tarefa excluída com sucesso.';
