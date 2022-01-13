@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Controllers\FileController;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class FileResource extends JsonResource
@@ -17,6 +18,7 @@ class FileResource extends JsonResource
         return [
             'id' => $this->id,
             'path' =>$this->path,
+            'url' =>FileController::uploadLink($this->path),
             'type' => $this->type,
             'task_id' => $this->task_id,
             'created_at' => $this->created_at,
