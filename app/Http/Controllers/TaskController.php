@@ -159,19 +159,22 @@ class TaskController extends Controller
             $feedback['message'] = 'Tarefa não encontrada.';
         } else {
             try {
+                $files = $task->files;
                 if ($softDelete) {
-                    $task->softDeletes();
-                } else {
-                    $files = $task->files;
                     $task->delete();
+                } else {
+                    $task->forceDelete();
                     if ($files) {
-                        FileController::removeUpload($files);
+                        foreach ($files as $f) {
+                            FileController::removeUpload($f);
+                        }
                     }
                 }
+
                 $feedback['result'] = true;
                 $feedback['message'] = 'Tarefa excluída com sucesso.';
             } catch (\Throwable $th) {
-                $feedback['message'] = 'Houve um erro ao excluir tarefa. Tente novamente ou contacte o administrador do sistema.';
+                $feedback['message'] = 'Houve um erro ao excluir tarefa. Tente novamente ou contacte o administrador do sistema.' . $th;
             }
         }
         return response()->json($feedback);
