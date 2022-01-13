@@ -17,14 +17,15 @@ class CreateFilesTable extends Migration
             $table->string('path')->unique();
             // $table->text('description')->nullable();
             $table->string('type', 10)->comment('File type, as such: image, video, audio, archive');
-            $table->unsignedBigInteger('task_id')->nullable();
+            $table->unsignedBigInteger('task_id');
             $table->timestamps();
+            $table->string('deleted_at')->nullable();
 
             $table->foreign('task_id')
-            ->references('id')
-            ->on('tasks')
-            ->onDelete('CASCADE')
-            ->onUpdate('CASCADE');
+                ->references('id')
+                ->on('tasks')
+                ->onDelete('CASCADE')
+                ->onUpdate('CASCADE');
         });
     }
 
