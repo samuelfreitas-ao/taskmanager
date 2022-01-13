@@ -19,7 +19,7 @@ class CreateTasksTable extends Migration
             $table->text('description')->nullable();
             $table->string('status', 20);
             $table->timestamps();
-            $table->string('deleted_at')->nullable();
+            $table->dateTime('deleted_at')->nullable();
         });
     }
 
