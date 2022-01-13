@@ -23,7 +23,7 @@ class FileController extends Controller
     /**
      * @param data $data
      */
-    public function upload($data)
+    public static function upload($data)
     {
         $feeback = ['result' => false, 'message' => '', 'data' => null];
         $file = $data->file;

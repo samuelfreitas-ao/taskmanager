@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\TaskResource;
 use App\Models\Task;
 use Illuminate\Http\Request;
+use stdClass;
 
 class TaskController extends Controller
 {
@@ -49,7 +50,11 @@ class TaskController extends Controller
                 $task->save();
 
                 if ($file) {
-                    //Upload file(s)
+                    //Uplaod and store a file in database
+                    $data = new stdClass();
+                    $data->file = $file;
+                    $data->task_id = $task->id;
+                    FileController::upload($data);
                 }
 
                 $task->load('files');
@@ -114,7 +119,11 @@ class TaskController extends Controller
                 $task->save();
 
                 if ($file) {
-                    //Upload file(s)
+                    //Uplaod and store a file in database
+                    $data = new stdClass();
+                    $data->file = $file;
+                    $data->task_id = $task->id;
+                    FileController::upload($data);
                 }
 
                 $task->load('files');
