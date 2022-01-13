@@ -194,4 +194,15 @@ class FileController extends Controller
         }
         return null;
     }
+
+
+    public static function uploadPath($file = null)
+    {
+        return Storage::path('') . ($file ?? '');
+    }
+
+    public static function uploadLink($file = null)
+    {
+        return url('/storage') . ($file ? '/' . $file : '');
+    }
 }
