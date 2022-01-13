@@ -113,6 +113,8 @@ class TaskController extends Controller
             $feedback['message'] = 'Selecione o estado da tarefa.';
         } else if (!$task = Task::find($id)) {
             $feedback['message'] = 'Tarefa não encontrada.';
+        } else if (Task::where('title', $title)->where('id', '<>', $id)->count() > 0) {
+            $feedback['message'] = 'Já tem uma tarefa com este título.';
         } else {
             try {
                 $task->title = $title;
