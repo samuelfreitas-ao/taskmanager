@@ -19,7 +19,7 @@ class CreateFilesTable extends Migration
             $table->string('type', 10)->comment('File type, as such: image, video, audio, archive');
             $table->unsignedBigInteger('task_id');
             $table->timestamps();
-            $table->dateTime('deleted_at')->nullable();
+            $table->softDeletes();
 
             $table->foreign('task_id')
                 ->references('id')
