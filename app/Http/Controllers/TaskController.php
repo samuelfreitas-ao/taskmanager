@@ -41,6 +41,8 @@ class TaskController extends Controller
             $feedback['message'] = 'Adicione uma descrição na tarefa.';
         } else if (!$status) {
             $feedback['message'] = 'Selecione o estado da tarefa.';
+        } else if (Task::where('title', $title)->count() > 0) {
+            $feedback['message'] = 'Já tem uma tarefa com este título.';
         } else {
             try {
                 $task = new Task();
