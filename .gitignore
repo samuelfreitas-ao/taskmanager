@@ -15,3 +15,5 @@ yarn-error.log
 /.vscode
 *.lock
 .lock.json
+*.zip
+*.rar

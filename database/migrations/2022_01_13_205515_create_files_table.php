@@ -14,8 +14,8 @@ class CreateFilesTable extends Migration
     public function up()
     {
         Schema::create('files', function (Blueprint $table) {
+            $table->id();
             $table->string('path')->unique();
-            // $table->text('description')->nullable();
             $table->string('type', 10)->comment('File type, as such: image, video, audio, archive');
             $table->unsignedBigInteger('task_id');
             $table->timestamps();
