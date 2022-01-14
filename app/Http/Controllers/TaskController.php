@@ -63,7 +63,7 @@ class TaskController extends Controller
 
                 $feedback['result'] = true;
                 $feedback['message'] = 'Tarefa cadastrada com sucesso.';
-                $feedback['data'] = $task;
+                $feedback['data'] = new TaskResource($task);
             } catch (\Throwable $th) {
                 $feedback['message'] = 'Houve um erro ao cadastrar tarefa. Tente novamente ou contacte o administrador do sistema.';
             }
@@ -134,7 +134,7 @@ class TaskController extends Controller
 
                 $feedback['result'] = true;
                 $feedback['message'] = 'Tarefa actualizada com sucesso.';
-                $feedback['data'] = $task;
+                $feedback['data'] = new TaskResource($task);
             } catch (\Throwable $th) {
                 $feedback['message'] = 'Houve um erro ao actualizar tarefa. Tente novamente ou contacte o administrador do sistema.';
             }
