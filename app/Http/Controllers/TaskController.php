@@ -16,7 +16,7 @@ class TaskController extends Controller
      */
     public function index()
     {
-        $tasks = Task::all();
+        $tasks = Task::orderby('id','desc')->get();
         $tasks->load('files');
         return TaskResource::collection($tasks);
     }
