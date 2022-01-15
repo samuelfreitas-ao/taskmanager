@@ -8,7 +8,7 @@ import { HttpClient } from '../../libs/http/http-client';
 import LoadingPage from '../loading';
 
 import Context from '../../components/context/serverContext'
-import { ButtonBlue } from '../../components/Button';
+import { ButtonBlue } from '../../components/button';
 import { TaskController } from '../../app/controllers/TaskController';
 
 export default function Tasks() {
@@ -42,9 +42,8 @@ export default function Tasks() {
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault()
         const response = await TaskController.create(formData)
-        const data = response.data
-        console.log(data.message);
-        if (!data.result) {
+        console.log(response.message);
+        if (!response.result) {
         } else {
             handClose()
             loadData()

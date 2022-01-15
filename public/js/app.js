@@ -2252,23 +2252,195 @@ var TaskController =
 /** @class */
 function () {
   function TaskController() {}
+  /**
+   * Store a record on database
+   *
+   * @param task
+   * @returns IPostResponse
+   */
 
-  TaskController.create = function (taks) {
+
+  TaskController.create = function (task) {
     return __awaiter(this, void 0, void 0, function () {
+      var feedback, response;
       return __generator(this, function (_a) {
         switch (_a.label) {
           case 0:
+            feedback = {
+              result: false,
+              message: '',
+              data: null
+            };
+            if (!(!task.title || !task.title.trim())) return [3
+            /*break*/
+            , 1];
+            feedback.message = 'Informe o título da tarefa.';
+            return [3
+            /*break*/
+            , 5];
+
+          case 1:
+            if (!(!task.description || !task.description.trim())) return [3
+            /*break*/
+            , 2];
+            feedback.message = 'Informe a descrição da tarefa.';
+            return [3
+            /*break*/
+            , 5];
+
+          case 2:
+            if (!(!task.status || !task.status.trim())) return [3
+            /*break*/
+            , 3];
+            feedback.message = 'Informe o estado da tarefa.';
+            return [3
+            /*break*/
+            , 5];
+
+          case 3:
             return [4
             /*yield*/
             , http_client_1.HttpClient.post({
-              uri: '/tasks/create',
-              data: taks
+              uri: "/tasks/create",
+              data: task
             })];
 
-          case 1:
+          case 4:
+            response = _a.sent();
+            feedback = response.data;
+            _a.label = 5;
+
+          case 5:
             return [2
             /*return*/
-            , _a.sent()];
+            , feedback];
+        }
+      });
+    });
+  };
+  /**
+   * Upadate record on database
+   *
+   * @param task ITask
+   * @returns IPostResponse
+   */
+
+
+  TaskController.update = function (task) {
+    return __awaiter(this, void 0, void 0, function () {
+      var feedback, response;
+      return __generator(this, function (_a) {
+        switch (_a.label) {
+          case 0:
+            feedback = {
+              result: false,
+              message: '',
+              data: null
+            };
+            if (!(!task.id || task.id < 1)) return [3
+            /*break*/
+            , 1];
+            feedback.message = 'Tarefa não encontrada.';
+            return [3
+            /*break*/
+            , 6];
+
+          case 1:
+            if (!(!task.title || !task.title.trim())) return [3
+            /*break*/
+            , 2];
+            feedback.message = 'Informe o título da tarefa.';
+            return [3
+            /*break*/
+            , 6];
+
+          case 2:
+            if (!(!task.description || !task.description.trim())) return [3
+            /*break*/
+            , 3];
+            feedback.message = 'Informe a descrição da tarefa.';
+            return [3
+            /*break*/
+            , 6];
+
+          case 3:
+            if (!(!task.status || !task.status.trim())) return [3
+            /*break*/
+            , 4];
+            feedback.message = 'Informe o estado da tarefa.';
+            return [3
+            /*break*/
+            , 6];
+
+          case 4:
+            return [4
+            /*yield*/
+            , http_client_1.HttpClient.post({
+              uri: "/tasks/".concat(task.id, "/update"),
+              data: task
+            })];
+
+          case 5:
+            response = _a.sent();
+            feedback = response.data;
+            _a.label = 6;
+
+          case 6:
+            return [2
+            /*return*/
+            , feedback];
+        }
+      });
+    });
+  };
+  /**
+   * Delete a record on database
+   *
+   * @param id task id on database table
+   * @param soft option to specify if delete soft or permantemently on db table
+   * @returns IPostResponse
+   */
+
+
+  TaskController["delete"] = function (id, soft) {
+    if (soft === void 0) {
+      soft = false;
+    }
+
+    return __awaiter(this, void 0, void 0, function () {
+      var feedback, response;
+      return __generator(this, function (_a) {
+        switch (_a.label) {
+          case 0:
+            feedback = {
+              result: false,
+              message: '',
+              data: null
+            };
+            if (!(!id || id < 1)) return [3
+            /*break*/
+            , 1];
+            feedback.message = 'Tarefa não encontrada.';
+            return [3
+            /*break*/
+            , 3];
+
+          case 1:
+            return [4
+            /*yield*/
+            , http_client_1.HttpClient.post({
+              uri: "/tasks/".concat(id, "/delete").concat(soft && '?soft=true')
+            })];
+
+          case 2:
+            response = _a.sent();
+            feedback = response.data;
+            _a.label = 3;
+
+          case 3:
+            return [2
+            /*return*/
+            , feedback];
         }
       });
     });
@@ -2281,9 +2453,9 @@ exports.TaskController = TaskController;
 
 /***/ }),
 
-/***/ "./resources/js/components/Button.tsx":
+/***/ "./resources/js/components/button.tsx":
 /*!********************************************!*\
-  !*** ./resources/js/components/Button.tsx ***!
+  !*** ./resources/js/components/button.tsx ***!
   \********************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
@@ -2571,7 +2743,7 @@ var modal_1 = __importDefault(__webpack_require__(/*! ./modal */ "./resources/js
 
 var serverContext_1 = __importDefault(__webpack_require__(/*! ../components/context/serverContext */ "./resources/js/components/context/serverContext.tsx"));
 
-var Button_1 = __webpack_require__(/*! ./Button */ "./resources/js/components/Button.tsx");
+var button_1 = __webpack_require__(/*! ./button */ "./resources/js/components/button.tsx");
 
 var bs_1 = __webpack_require__(/*! react-icons/bs */ "./node_modules/react-icons/bs/index.esm.js");
 
@@ -2630,9 +2802,9 @@ function NewTaskCard(prop) {
     disabled: true
   }, "-Selecine-"), react_1["default"].createElement("option", null, "Pendente"), react_1["default"].createElement("option", null, "Activo"), react_1["default"].createElement("option", null, "Feito"))), react_1["default"].createElement("div", {
     className: "flex gap-2"
-  }, react_1["default"].createElement(Button_1.ButtonBlue, {
+  }, react_1["default"].createElement(button_1.ButtonBlue, {
     type: 'submit'
-  }, task ? 'Salvar' : 'Criar'), react_1["default"].createElement(Button_1.ButtonGrayLight, {
+  }, task ? 'Salvar' : 'Criar'), react_1["default"].createElement(button_1.ButtonGrayLight, {
     type: 'reset',
     onClick: handClose
   }, "Fechar", react_1["default"].createElement(bs_1.BsX, null))))));
@@ -3410,7 +3582,7 @@ var loading_1 = __importDefault(__webpack_require__(/*! ../loading */ "./resourc
 
 var serverContext_1 = __importDefault(__webpack_require__(/*! ../../components/context/serverContext */ "./resources/js/components/context/serverContext.tsx"));
 
-var Button_1 = __webpack_require__(/*! ../../components/Button */ "./resources/js/components/Button.tsx");
+var button_1 = __webpack_require__(/*! ../../components/button */ "./resources/js/components/button.tsx");
 
 var TaskController_1 = __webpack_require__(/*! ../../app/controllers/TaskController */ "./resources/js/app/controllers/TaskController.ts");
 
@@ -3457,7 +3629,7 @@ function Tasks() {
 
   var handleSubmit = function handleSubmit(e) {
     return __awaiter(_this, void 0, void 0, function () {
-      var response, data;
+      var response;
       return __generator(this, function (_a) {
         switch (_a.label) {
           case 0:
@@ -3468,10 +3640,9 @@ function Tasks() {
 
           case 1:
             response = _a.sent();
-            data = response.data;
-            console.log(data.message);
+            console.log(response.message);
 
-            if (!data.result) {} else {
+            if (!response.result) {} else {
               handClose();
               loadData();
             }
@@ -3492,7 +3663,7 @@ function Tasks() {
     className: "mb-5 font-semibold text-3xl"
   }, "Tarefas (", react_1["default"].createElement("small", null, tasks.length), ")"), react_1["default"].createElement("div", {
     className: "mb-2"
-  }, react_1["default"].createElement(Button_1.ButtonBlue, {
+  }, react_1["default"].createElement(button_1.ButtonBlue, {
     onClick: handleShow
   }, react_1["default"].createElement(bs_1.BsPlusCircle, null), "Nova")), react_1["default"].createElement(serverContext_1["default"].Provider, {
     value: {

@@ -2,7 +2,7 @@ import React, { ChangeEvent, FormEvent, useContext, useState } from 'react';
 import { ITask } from '../app/types/task';
 import Modal from './modal';
 import Context from '../components/context/serverContext'
-import { ButtonBlue, ButtonGray, ButtonGrayLight } from './Button';
+import { ButtonBlue, ButtonGray, ButtonGrayLight } from './button';
 import { BsX } from 'react-icons/bs';
 
 type Props = {

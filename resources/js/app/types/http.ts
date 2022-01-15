@@ -10,3 +10,9 @@ export type IGetParams = {
     callback?(response: any): any
     config?: {}
 }
+
+export type IPostResponse = {
+    result: boolean
+    message: string
+    data: any
+}
