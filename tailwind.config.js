@@ -5,9 +5,12 @@ module.exports = {
         './resources/**/*.tsx',
         './resources/**/*.vue',
     ],
-    darkMode: false, // or 'media' or 'class'
     theme: {
-        extend: {},
+        extend: {
+            width:{
+                128:'32rem'
+            }
+        },
     },
     variants: {
         extend: {
