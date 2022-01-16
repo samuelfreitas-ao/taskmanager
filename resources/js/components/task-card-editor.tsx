@@ -11,7 +11,7 @@ type Props = {
 }
 export default function TaskCardEditor(prop: Props) {
     const { handClose, handleSubmit, formData, setFormData } = useContext(Context)
-    const task = JSON.stringify(prop.task) != '{}' ? prop.task : undefined
+    const task = JSON.stringify(prop.task) != '{}' && prop.task?.id ? prop.task : undefined
 
     const handleChange = (event: ChangeEvent<any>) => {
         const target = event.target

@@ -2767,6 +2767,167 @@ exports.Modal = Modal;
 
 /***/ }),
 
+/***/ "./resources/js/components/notification.tsx":
+/*!**************************************************!*\
+  !*** ./resources/js/components/notification.tsx ***!
+  \**************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  Object.defineProperty(o, k2, {
+    enumerable: true,
+    get: function get() {
+      return m[k];
+    }
+  });
+} : function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  o[k2] = m[k];
+});
+
+var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (o, v) {
+  Object.defineProperty(o, "default", {
+    enumerable: true,
+    value: v
+  });
+} : function (o, v) {
+  o["default"] = v;
+});
+
+var __importStar = this && this.__importStar || function (mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) {
+    if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+  }
+
+  __setModuleDefault(result, mod);
+
+  return result;
+};
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.NotificationHandle = exports.NotificationType = void 0;
+
+var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var bs_1 = __webpack_require__(/*! react-icons/bs */ "./node_modules/react-icons/bs/index.esm.js");
+
+var context_1 = __importDefault(__webpack_require__(/*! ./context */ "./resources/js/components/context.tsx"));
+
+var NotificationType;
+
+(function (NotificationType) {
+  NotificationType["INFO"] = "info";
+  NotificationType["ERROR"] = "error";
+  NotificationType["SUCCESS"] = "success";
+})(NotificationType = exports.NotificationType || (exports.NotificationType = {}));
+
+function Notification(data) {
+  var not = NotificationType;
+  var title = {
+    info: 'Informação',
+    error: 'Erro',
+    success: 'Sucesso'
+  };
+
+  var _a = (0, react_1.useState)(3),
+      show = _a[0],
+      setSow = _a[1];
+
+  var _b = (0, react_1.useContext)(context_1["default"]),
+      setNotify = _b.setNotify,
+      notify = _b.notify;
+
+  var classList;
+
+  switch (data.type) {
+    case not.ERROR:
+      classList = 'bg-red-200 border-red-300';
+      break;
+
+    case not.SUCCESS:
+      classList = 'bg-green-200 border-green-300';
+      break;
+
+    case not.INFO:
+      classList = 'bg-blue-200 border-blue-300';
+      break;
+
+    default:
+      break;
+  }
+
+  if (!classList) return react_1["default"].createElement(react_1["default"].Fragment, null);
+  setTimeout(function () {
+    setNotify({});
+  }, 5000);
+  return react_1["default"].createElement(react_1["default"].Fragment, null, notify.type && react_1["default"].createElement("div", {
+    className: "fixed right-5 top-5 w-96 rounded-lg ".concat(classList),
+    style: {
+      zIndex: 999
+    }
+  }, react_1["default"].createElement("div", {
+    className: "px-5 py-3"
+  }, react_1["default"].createElement("div", {
+    className: "flex gap-2 items-center"
+  }, react_1["default"].createElement("div", {
+    className: "text-4xl"
+  }, function () {
+    switch (data.type) {
+      case NotificationType.ERROR:
+        return react_1["default"].createElement(bs_1.BsExclamationTriangle, null);
+
+      case NotificationType.INFO:
+        return react_1["default"].createElement(bs_1.BsCheckCircle, null);
+
+      case NotificationType.SUCCESS:
+        return react_1["default"].createElement(bs_1.BsCheckCircle, null);
+
+      default:
+    }
+  }()), react_1["default"].createElement("div", {
+    className: ""
+  }, react_1["default"].createElement("div", {
+    className: "font-semibold"
+  }, title[data.type]), react_1["default"].createElement("div", {
+    className: ""
+  }, data.message))))));
+}
+
+exports["default"] = Notification;
+
+function NotificationHandle(data) {
+  var _a = (0, react_1.useState)(false),
+      show = _a[0],
+      setShow = _a[1];
+
+  setTimeout(function () {
+    setShow(false);
+  }, 3000);
+  return show && react_1["default"].createElement(Notification, {
+    message: data.message,
+    type: data.type,
+    show: show
+  });
+}
+
+exports.NotificationHandle = NotificationHandle;
+
+/***/ }),
+
 /***/ "./resources/js/components/spinner/horizontal-circle/index.tsx":
 /*!*********************************************************************!*\
   !*** ./resources/js/components/spinner/horizontal-circle/index.tsx ***!
@@ -3244,13 +3405,15 @@ var button_1 = __webpack_require__(/*! ./button */ "./resources/js/components/bu
 var bs_1 = __webpack_require__(/*! react-icons/bs */ "./node_modules/react-icons/bs/index.esm.js");
 
 function TaskCardEditor(prop) {
-  var _a = (0, react_1.useContext)(context_1["default"]),
-      handClose = _a.handClose,
-      handleSubmit = _a.handleSubmit,
-      formData = _a.formData,
-      setFormData = _a.setFormData;
+  var _a;
 
-  var task = JSON.stringify(prop.task) != '{}' ? prop.task : undefined;
+  var _b = (0, react_1.useContext)(context_1["default"]),
+      handClose = _b.handClose,
+      handleSubmit = _b.handleSubmit,
+      formData = _b.formData,
+      setFormData = _b.setFormData;
+
+  var task = JSON.stringify(prop.task) != '{}' && ((_a = prop.task) === null || _a === void 0 ? void 0 : _a.id) ? prop.task : undefined;
 
   var handleChange = function handleChange(event) {
     var _a, _b;
@@ -3874,109 +4037,6 @@ exports["default"] = axios_1["default"].create({
 "use strict";
 
 
-var __importDefault = this && this.__importDefault || function (mod) {
-  return mod && mod.__esModule ? mod : {
-    "default": mod
-  };
-};
-
-Object.defineProperty(exports, "__esModule", ({
-  value: true
-}));
-
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-
-var layout_1 = __importDefault(__webpack_require__(/*! ../../components/layout */ "./resources/js/components/layout.tsx"));
-
-function Home() {
-  return react_1["default"].createElement(layout_1["default"], null, react_1["default"].createElement("div", null, "Home"));
-}
-
-exports["default"] = Home;
-
-/***/ }),
-
-/***/ "./resources/js/pages/loading/index.tsx":
-/*!**********************************************!*\
-  !*** ./resources/js/pages/loading/index.tsx ***!
-  \**********************************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var __importDefault = this && this.__importDefault || function (mod) {
-  return mod && mod.__esModule ? mod : {
-    "default": mod
-  };
-};
-
-Object.defineProperty(exports, "__esModule", ({
-  value: true
-}));
-
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-
-var layout_1 = __importDefault(__webpack_require__(/*! ../../components/layout */ "./resources/js/components/layout.tsx"));
-
-var spinner_1 = __webpack_require__(/*! ../../components/spinner */ "./resources/js/components/spinner/index.tsx");
-
-function LoadingPage(data) {
-  return react_1["default"].createElement(layout_1["default"], {
-    title: data.title ? data.title : 'Carregando...'
-  }, react_1["default"].createElement("div", {
-    className: "flex flex-row w-full h-full"
-  }, react_1["default"].createElement("div", {
-    className: "flex flex-col gap-2 items-center justify-center w-full text-2xl"
-  }, react_1["default"].createElement(spinner_1.SpinnerHorizontalCircle, null), data.text ? data.text : 'Carregando...')));
-}
-
-exports["default"] = LoadingPage;
-
-/***/ }),
-
-/***/ "./resources/js/pages/notfound/index.tsx":
-/*!***********************************************!*\
-  !*** ./resources/js/pages/notfound/index.tsx ***!
-  \***********************************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var __importDefault = this && this.__importDefault || function (mod) {
-  return mod && mod.__esModule ? mod : {
-    "default": mod
-  };
-};
-
-Object.defineProperty(exports, "__esModule", ({
-  value: true
-}));
-
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-
-var layout_1 = __importDefault(__webpack_require__(/*! ../../components/layout */ "./resources/js/components/layout.tsx"));
-
-function Home() {
-  return react_1["default"].createElement(layout_1["default"], null, react_1["default"].createElement("div", {
-    className: 'text-2xl text-center'
-  }, "P\xE1gina n\xE3o encontrada."));
-}
-
-exports["default"] = Home;
-
-/***/ }),
-
-/***/ "./resources/js/pages/task/index.tsx":
-/*!*******************************************!*\
-  !*** ./resources/js/pages/task/index.tsx ***!
-  \*******************************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-
 var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
   if (k2 === undefined) k2 = k;
   Object.defineProperty(o, k2, {
@@ -4188,6 +4248,8 @@ var task_card_delete_1 = __webpack_require__(/*! ../../components/task-card-dele
 
 var task_card_detail_1 = __importDefault(__webpack_require__(/*! ../../components/task-card-detail */ "./resources/js/components/task-card-detail.tsx"));
 
+var notification_1 = __importStar(__webpack_require__(/*! ../../components/notification */ "./resources/js/components/notification.tsx"));
+
 function Tasks() {
   var _this = this;
 
@@ -4222,6 +4284,15 @@ function Tasks() {
   var _h = (0, react_1.useState)(false),
       softDelete = _h[0],
       setSoftDelete = _h[1];
+
+  var _j = (0, react_1.useState)({
+    result: false,
+    message: '',
+    type: '',
+    show: false
+  }),
+      notify = _j[0],
+      setNotify = _j[1];
 
   (0, react_1.useEffect)(function () {
     loadData();
@@ -4262,7 +4333,7 @@ function Tasks() {
 
   var handleSubmit = function handleSubmit(e) {
     return __awaiter(_this, void 0, void 0, function () {
-      var response;
+      var response, type;
       return __generator(this, function (_a) {
         switch (_a.label) {
           case 0:
@@ -4290,9 +4361,15 @@ function Tasks() {
             _a.label = 4;
 
           case 4:
-            console.log(response.message);
+            type = response.result ? notification_1.NotificationType.SUCCESS : notification_1.NotificationType.ERROR;
+            setNotify({
+              message: response.message,
+              type: type,
+              show: true,
+              result: response.result
+            });
 
-            if (!response.result) {} else {
+            if (response.result) {
               handClose();
               loadData();
             }
@@ -4307,7 +4384,7 @@ function Tasks() {
 
   var handleSubmitDelete = function handleSubmitDelete(e) {
     return __awaiter(_this, void 0, void 0, function () {
-      var response;
+      var response, type;
       return __generator(this, function (_a) {
         switch (_a.label) {
           case 0:
@@ -4318,8 +4395,15 @@ function Tasks() {
 
           case 1:
             response = _a.sent();
+            type = response.result ? notification_1.NotificationType.SUCCESS : notification_1.NotificationType.ERROR;
+            setNotify({
+              message: response.message,
+              type: type,
+              show: true,
+              result: response.result
+            });
 
-            if (!response.result) {} else {
+            if (response.result) {
               handClose();
               loadData();
             }
@@ -4336,7 +4420,16 @@ function Tasks() {
     return react_1["default"].createElement(loading_1["default"], null);
   }
 
-  return react_1["default"].createElement(layout_1["default"], null, react_1["default"].createElement("div", null, react_1["default"].createElement("div", {
+  return react_1["default"].createElement(layout_1["default"], null, react_1["default"].createElement(context_1["default"].Provider, {
+    value: {
+      setNotify: setNotify,
+      notify: notify
+    }
+  }, react_1["default"].createElement(notification_1["default"], {
+    message: notify.message,
+    type: notify.type,
+    show: notify.show
+  })), react_1["default"].createElement("div", null, react_1["default"].createElement("div", {
     className: "mb-5 font-semibold text-3xl"
   }, "Tarefas (", react_1["default"].createElement("small", null, tasks.length), ")"), react_1["default"].createElement("div", {
     className: "mb-2"
@@ -4400,6 +4493,78 @@ exports["default"] = Tasks;
 
 /***/ }),
 
+/***/ "./resources/js/pages/loading/index.tsx":
+/*!**********************************************!*\
+  !*** ./resources/js/pages/loading/index.tsx ***!
+  \**********************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var layout_1 = __importDefault(__webpack_require__(/*! ../../components/layout */ "./resources/js/components/layout.tsx"));
+
+var spinner_1 = __webpack_require__(/*! ../../components/spinner */ "./resources/js/components/spinner/index.tsx");
+
+function LoadingPage(data) {
+  return react_1["default"].createElement(layout_1["default"], {
+    title: data.title ? data.title : 'Carregando...'
+  }, react_1["default"].createElement("div", {
+    className: "flex flex-row w-full h-full"
+  }, react_1["default"].createElement("div", {
+    className: "flex flex-col gap-2 items-center justify-center w-full text-2xl"
+  }, react_1["default"].createElement(spinner_1.SpinnerHorizontalCircle, null), data.text ? data.text : 'Carregando...')));
+}
+
+exports["default"] = LoadingPage;
+
+/***/ }),
+
+/***/ "./resources/js/pages/notfound/index.tsx":
+/*!***********************************************!*\
+  !*** ./resources/js/pages/notfound/index.tsx ***!
+  \***********************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var layout_1 = __importDefault(__webpack_require__(/*! ../../components/layout */ "./resources/js/components/layout.tsx"));
+
+function Home() {
+  return react_1["default"].createElement(layout_1["default"], null, react_1["default"].createElement("div", {
+    className: 'text-2xl text-center'
+  }, "P\xE1gina n\xE3o encontrada."));
+}
+
+exports["default"] = Home;
+
+/***/ }),
+
 /***/ "./resources/js/routes.tsx":
 /*!*********************************!*\
   !*** ./resources/js/routes.tsx ***!
@@ -4427,15 +4592,10 @@ var home_1 = __importDefault(__webpack_require__(/*! ./pages/home */ "./resource
 
 var notfound_1 = __importDefault(__webpack_require__(/*! ./pages/notfound */ "./resources/js/pages/notfound/index.tsx"));
 
-var task_1 = __importDefault(__webpack_require__(/*! ./pages/task */ "./resources/js/pages/task/index.tsx"));
-
 var MyRoutes = function MyRoutes() {
   return react_1["default"].createElement(react_router_dom_1.BrowserRouter, null, react_1["default"].createElement(react_router_dom_1.Routes, null, react_1["default"].createElement(react_router_dom_1.Route, {
     path: '/',
     element: react_1["default"].createElement(home_1["default"], null)
-  }), react_1["default"].createElement(react_router_dom_1.Route, {
-    path: '/tasks',
-    element: react_1["default"].createElement(task_1["default"], null)
   }), react_1["default"].createElement(react_router_dom_1.Route, {
     path: '*',
     element: react_1["default"].createElement(notfound_1["default"], null)
