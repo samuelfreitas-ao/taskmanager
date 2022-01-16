@@ -26,6 +26,16 @@ export function ButtonRed(props: ButtonProps) {
     )
 }
 
+export function ButtonYellow(props: ButtonProps) {
+    const className = props.className || ''
+    return (
+        <button
+            className={classDefault+' focus:ring-yellow-600 bg-yellow-600 hover:bg-yellow-700 ' + className}
+            {...props}
+        />
+    )
+}
+
 export function ButtonGray(props: ButtonProps) {
     const className = props.className || ''
     return (

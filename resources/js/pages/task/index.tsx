@@ -1,5 +1,5 @@
 import React, { FormEvent, useEffect, useState } from 'react';
-import { BsPlusCircle } from 'react-icons/bs'
+import { BsInfoCircle, BsPlusCircle } from 'react-icons/bs'
 import { ITask } from '../../app/types/task';
 import Layout from '../../components/layout';
 import TaskCardEditor from '../../components/task-card-editor';
@@ -11,14 +11,17 @@ import Context from '../../components/context'
 import { ButtonBlue } from '../../components/button';
 import { TaskController } from '../../app/controllers/TaskController';
 import { TaskCardDelete } from '../../components/task-card-delete';
+import TaskCardDetail from '../../components/task-card-detail';
 
 export default function Tasks() {
     const [tasks, setTaks] = useState<ITask[]>([]);
     const [loading, setLoading] = useState<boolean>(true)
     const [showModal, setShowModal] = useState<boolean>(false)
     const [showModalDelete, setShowModalDelete] = useState<boolean>(false)
+    const [showModalDetail, setShowModalDetail] = useState<boolean>(false)
     const [formData, setFormData] = useState<ITask>({} as ITask)
     const [selectedCard, setSelectedCard] = useState<[any, boolean]>([0, false])
+    const [softDelete, setSoftDelete] = useState(false)
 
     useEffect(() => {
         loadData()
@@ -30,6 +33,11 @@ export default function Tasks() {
 
     const handleShowdelete = () => {
         setShowModalDelete(true)
+        setSoftDelete(false);
+    }
+
+    const handleShowTask = () => {
+        setShowModalDetail(true)
     }
 
     const loadData = () => {
@@ -45,6 +53,7 @@ export default function Tasks() {
     const handClose = () => {
         setShowModal(false)
         setShowModalDelete(false)
+        setShowModalDetail(false)
         setFormData({} as ITask)
         setTimeout(() => {
             setSelectedCard([0, false])
@@ -68,9 +77,8 @@ export default function Tasks() {
     }
 
     const handleSubmitDelete = async (e: FormEvent) => {
-        e.preventDefault()
-        const response = await TaskController.delete(formData.id)
-
+         e.preventDefault()
+        const response = await TaskController.delete(formData.id, softDelete)
         if (!response.result) {
         } else {
             handClose()
@@ -88,24 +96,35 @@ export default function Tasks() {
                 <div className="mb-2">
                     <ButtonBlue onClick={handleShowEditor}>
                         <BsPlusCircle />
-                        Nova
+                        Nova tarefa
                     </ButtonBlue>
                 </div>
                 <Context.Provider value={{ handClose, handleSubmit, setFormData, formData }}>
                     <TaskCardEditor show={showModal} task={formData} />
                 </Context.Provider>
 
-                <Context.Provider value={{ handClose, handleSubmitDelete }}>
-                    <TaskCardDelete show={showModalDelete} task={formData} />
+                <Context.Provider value={{ handClose, handleSubmitDelete, setSoftDelete, softDelete }}>
+                    {showModalDelete &&
+                        <TaskCardDelete show={showModalDelete} task={formData} />
+                    }
+                </Context.Provider>
+
+                <Context.Provider value={{ handClose }}>
+                    {showModalDetail &&
+                        <TaskCardDetail show={showModalDetail} id={formData.id} />
+                    }
                 </Context.Provider>
                 {tasks.length < 1 ?
-                    <div className=""></div>
+                    <div className="flex items-center gap-x-2 bg-blue-50 border border-blue-100 px-7 py-4 text-center">
+                        <BsInfoCircle />
+                        Nenhuma tarefa de momento. Comece a criar uma.
+                    </div>
                     :
                     <div className="">
                         <ul className='grid grid-cols-3 gap-4'>
                             {tasks.map((task) => (
                                 <li key={task.id} className=''>
-                                    <Context.Provider value={{ handClose, setFormData, handleShowEditor, handleShowdelete, setSelectedCard, selectedCard }}>
+                                    <Context.Provider value={{ handClose, setFormData, handleShowEditor, handleShowTask, handleShowdelete, setSelectedCard, selectedCard }}>
                                         <TaskCard selected={selectedCard[task.id]} task={task} />
                                     </Context.Provider>
                                 </li>

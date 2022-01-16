@@ -2472,7 +2472,7 @@ var __importDefault = this && this.__importDefault || function (mod) {
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-exports.ButtonAnchor = exports.ButtonLink = exports.ButtonGrayLight = exports.ButtonGray = exports.ButtonRed = exports.ButtonBlue = void 0;
+exports.ButtonAnchor = exports.ButtonLink = exports.ButtonGrayLight = exports.ButtonGray = exports.ButtonYellow = exports.ButtonRed = exports.ButtonBlue = void 0;
 
 var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 
@@ -2497,6 +2497,15 @@ function ButtonRed(props) {
 }
 
 exports.ButtonRed = ButtonRed;
+
+function ButtonYellow(props) {
+  var className = props.className || '';
+  return react_1["default"].createElement("button", __assign({
+    className: classDefault + ' focus:ring-yellow-600 bg-yellow-600 hover:bg-yellow-700 ' + className
+  }, props));
+}
+
+exports.ButtonYellow = ButtonYellow;
 
 function ButtonGray(props) {
   var className = props.className || '';
@@ -2564,6 +2573,112 @@ Object.defineProperty(exports, "__esModule", ({
 var react_1 = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 exports["default"] = (0, react_1.createContext)({});
+
+/***/ }),
+
+/***/ "./resources/js/components/file-card.tsx":
+/*!***********************************************!*\
+  !*** ./resources/js/components/file-card.tsx ***!
+  \***********************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  Object.defineProperty(o, k2, {
+    enumerable: true,
+    get: function get() {
+      return m[k];
+    }
+  });
+} : function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  o[k2] = m[k];
+});
+
+var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (o, v) {
+  Object.defineProperty(o, "default", {
+    enumerable: true,
+    value: v
+  });
+} : function (o, v) {
+  o["default"] = v;
+});
+
+var __importStar = this && this.__importStar || function (mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) {
+    if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+  }
+
+  __setModuleDefault(result, mod);
+
+  return result;
+};
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var file_helper_1 = __webpack_require__(/*! ../utils/file-helper */ "./resources/js/utils/file-helper.tsx");
+
+var context_1 = __importDefault(__webpack_require__(/*! ./context */ "./resources/js/components/context.tsx"));
+
+function FileCard(data) {
+  var _a = (0, react_1.useContext)(context_1["default"]),
+      handleShowEditor = _a.handleShowEditor,
+      handleShowTask = _a.handleShowTask,
+      handleShowdelete = _a.handleShowdelete,
+      setFormData = _a.setFormData,
+      setSelectedCard = _a.setSelectedCard,
+      selectedCard = _a.selectedCard;
+
+  var file = data.file;
+  var fileName = file_helper_1.FileHelper.getNameWithExtension(file.path);
+  return react_1["default"].createElement("div", {
+    className: "border p-2"
+  }, react_1["default"].createElement("div", {
+    className: ""
+  }, function () {
+    switch (file_helper_1.FileHelper.getType(file.path)) {
+      case file_helper_1.FileType.IMAGE:
+        return react_1["default"].createElement("div", null, react_1["default"].createElement("img", {
+          src: file.url,
+          alt: ""
+        }));
+
+      case file_helper_1.FileType.AUDIO:
+        return react_1["default"].createElement("div", null, react_1["default"].createElement("audio", {
+          src: file.url
+        }));
+
+      case file_helper_1.FileType.VIDEO:
+        return react_1["default"].createElement("div", null, react_1["default"].createElement("video", {
+          src: file.url
+        }));
+
+      default:
+        return react_1["default"].createElement("a", {
+          href: file.url,
+          target: '_blank',
+          className: 'flex gap-2 items-center text-blue-600 hover:underline hover:text-blue-700'
+        }, fileName);
+    }
+  }()));
+}
+
+exports["default"] = FileCard;
 
 /***/ }),
 
@@ -2644,7 +2759,7 @@ function Modal(_a) {
   }, react_1["default"].createElement("div", {
     className: " flex flex-col items-center h-full p-4 sm:p-2 sm:px-8 sm:py-4 overflow-y-auto"
   }, react_1["default"].createElement("div", {
-    className: "flex flex-col justify-center items-center w-full xl:w-4/5 h-full px-4 py-4 rounded-lg overflow-y-auto shadow p-5"
+    className: "flex flex-col  items-center w-full xl:w-4/5 h-full px-4 py-4 rounded-lg overflow-y-auto shadow p-5"
   }, children))))));
 }
 
@@ -2799,9 +2914,16 @@ var bs_1 = __webpack_require__(/*! react-icons/bs */ "./node_modules/react-icons
 function TaskCardDelete(prop) {
   var _a = (0, react_1.useContext)(context_1["default"]),
       handClose = _a.handClose,
-      handleSubmitDelete = _a.handleSubmitDelete;
+      handleSubmitDelete = _a.handleSubmitDelete,
+      setSoftDelete = _a.setSoftDelete,
+      softDelete = _a.softDelete;
 
   var task = prop.task;
+
+  var handleSoftDelete = function handleSoftDelete(e) {
+    setSoftDelete(!e.target.checked);
+  };
+
   return react_1["default"].createElement(modal_1.Modal, {
     show: prop.show
   }, react_1["default"].createElement("div", {
@@ -2819,8 +2941,21 @@ function TaskCardDelete(prop) {
   }, "Excluir tarefa"), react_1["default"].createElement("div", {
     className: ""
   }, "Deseja realmente excluir a tarefa ", react_1["default"].createElement("b", null, task.title), "?"), react_1["default"].createElement("div", {
+    className: "flex items-center gap-2"
+  }, react_1["default"].createElement("label", {
+    htmlFor: "soft_delete",
+    className: 'text-sm'
+  }, "Excluir permanentemente"), react_1["default"].createElement("input", {
+    type: "checkbox",
+    name: 'soft_delete',
+    id: 'soft_delete',
+    defaultChecked: !softDelete,
+    onChange: handleSoftDelete
+  })), react_1["default"].createElement("div", {
     className: "flex gap-2"
-  }, react_1["default"].createElement(button_1.ButtonRed, {
+  }, softDelete ? react_1["default"].createElement(button_1.ButtonYellow, {
+    type: 'submit'
+  }, react_1["default"].createElement(bs_1.BsRecycle, null), " Mover para lixeira") : react_1["default"].createElement(button_1.ButtonRed, {
     type: 'submit'
   }, react_1["default"].createElement(bs_1.BsTrash, null), " Excluir"), react_1["default"].createElement(button_1.ButtonGrayLight, {
     type: 'reset',
@@ -2829,6 +2964,203 @@ function TaskCardDelete(prop) {
 }
 
 exports.TaskCardDelete = TaskCardDelete;
+
+/***/ }),
+
+/***/ "./resources/js/components/task-card-detail.tsx":
+/*!******************************************************!*\
+  !*** ./resources/js/components/task-card-detail.tsx ***!
+  \******************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __assign = this && this.__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+
+      for (var p in s) {
+        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+    }
+
+    return t;
+  };
+
+  return __assign.apply(this, arguments);
+};
+
+var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  Object.defineProperty(o, k2, {
+    enumerable: true,
+    get: function get() {
+      return m[k];
+    }
+  });
+} : function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  o[k2] = m[k];
+});
+
+var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (o, v) {
+  Object.defineProperty(o, "default", {
+    enumerable: true,
+    value: v
+  });
+} : function (o, v) {
+  o["default"] = v;
+});
+
+var __importStar = this && this.__importStar || function (mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) {
+    if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+  }
+
+  __setModuleDefault(result, mod);
+
+  return result;
+};
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var modal_1 = __webpack_require__(/*! ./modal */ "./resources/js/components/modal.tsx");
+
+var context_1 = __importDefault(__webpack_require__(/*! ./context */ "./resources/js/components/context.tsx"));
+
+var button_1 = __webpack_require__(/*! ./button */ "./resources/js/components/button.tsx");
+
+var bs_1 = __webpack_require__(/*! react-icons/bs */ "./node_modules/react-icons/bs/index.esm.js");
+
+var http_client_1 = __webpack_require__(/*! ../libs/http/http-client */ "./resources/js/libs/http/http-client.ts");
+
+var spinner_1 = __webpack_require__(/*! ./spinner */ "./resources/js/components/spinner/index.tsx");
+
+var file_card_1 = __importDefault(__webpack_require__(/*! ./file-card */ "./resources/js/components/file-card.tsx"));
+
+var task_status_card_1 = __importDefault(__webpack_require__(/*! ./task-status-card */ "./resources/js/components/task-status-card.tsx"));
+
+function TaskCardDetail(prop) {
+  var _a = (0, react_1.useContext)(context_1["default"]),
+      handClose = _a.handClose,
+      handleSubmit = _a.handleSubmit,
+      formData = _a.formData,
+      setFormData = _a.setFormData;
+
+  var _b = (0, react_1.useState)({}),
+      task = _b[0],
+      setTask = _b[1];
+
+  var _c = (0, react_1.useState)(true),
+      loading = _c[0],
+      setLoading = _c[1];
+
+  var id = prop.id;
+  (0, react_1.useEffect)(function () {
+    http_client_1.HttpClient.get({
+      uri: "/tasks/".concat(id),
+      callback: function callback(response) {
+        setLoading(false);
+        setTask(response.data);
+      }
+    });
+  }, []);
+
+  var handleChange = function handleChange(event) {
+    var _a, _b;
+
+    var target = event.target;
+    var name = target.name,
+        value = target.value;
+
+    if (name == 'file') {
+      target.files;
+      setFormData(__assign(__assign({}, formData), (_a = {}, _a[name] = target.files, _a)));
+    } else {
+      setFormData(__assign(__assign({}, formData), (_b = {}, _b[name] = value, _b)));
+    }
+  };
+
+  return react_1["default"].createElement(modal_1.Modal, {
+    show: prop.show
+  }, react_1["default"].createElement("div", {
+    className: "bg-white px-6 py-8",
+    style: {
+      width: '100%'
+    }
+  }, loading ? react_1["default"].createElement("div", {
+    className: "flex gap-2 text-center"
+  }, react_1["default"].createElement(spinner_1.SpinnerHorizontalCircle, null), " Carregando tarefa ", react_1["default"].createElement("b", null, "#", id)) : react_1["default"].createElement("form", {
+    action: "",
+    onSubmit: handleSubmit,
+    className: 'grid gap-y-2'
+  }, react_1["default"].createElement("div", {
+    className: "mb-2 pb-2 border-b font-semibold"
+  }, "Tarefa #", task.id, " ", task.title), react_1["default"].createElement("div", {
+    className: "grid lg:grid-cols-3 gap-3"
+  }, react_1["default"].createElement("div", {
+    className: "lg:col-span-2",
+    style: {
+      maxHeight: '800px'
+    }
+  }, react_1["default"].createElement("div", {
+    className: "flex items-center gap-2"
+  }, react_1["default"].createElement(task_status_card_1["default"], {
+    status: task && task.status
+  })), react_1["default"].createElement("div", {
+    className: "flex flex-col mt-3"
+  }, react_1["default"].createElement("div", {
+    className: ""
+  }, "Descri\xE7\xE3o"), react_1["default"].createElement("textarea", {
+    className: 'flex-1 focus:outline-none px-3 py-1 border rounded',
+    name: 'description',
+    onChange: handleChange,
+    defaultValue: task && task.description,
+    rows: 10,
+    placeholder: "Descri\xE7\xE3o"
+  }))), react_1["default"].createElement("div", {
+    className: "p-3"
+  }, react_1["default"].createElement("div", {
+    className: "border-b mb-2 font-semibold"
+  }, "Anexos (", react_1["default"].createElement("small", null, task.files && task.files.length), ")"), !task.files || task.files.length < 1 ? react_1["default"].createElement("div", {
+    className: ""
+  }, "Nenhum ficheiro anexado a esta tarefa") : react_1["default"].createElement("div", {
+    className: "h-full overflow-y-auto",
+    style: {
+      maxHeight: '800px'
+    }
+  }, react_1["default"].createElement("ul", {
+    className: 'grid'
+  }, task.files.map(function (file) {
+    return react_1["default"].createElement("li", {
+      key: file.id,
+      className: 'grid mb-5 pb-2'
+    }, react_1["default"].createElement(file_card_1["default"], {
+      file: file
+    }));
+  }))))), react_1["default"].createElement("div", {
+    className: "flex gap-2 mt-5"
+  }, react_1["default"].createElement(button_1.ButtonGrayLight, {
+    type: 'reset',
+    onClick: handClose
+  }, "Fechar", react_1["default"].createElement(bs_1.BsX, null))))));
+}
+
+exports["default"] = TaskCardDetail;
 
 /***/ }),
 
@@ -3075,9 +3407,12 @@ var button_1 = __webpack_require__(/*! ./button */ "./resources/js/components/bu
 
 var context_1 = __importDefault(__webpack_require__(/*! ./context */ "./resources/js/components/context.tsx"));
 
+var task_status_card_1 = __importDefault(__webpack_require__(/*! ./task-status-card */ "./resources/js/components/task-status-card.tsx"));
+
 function TaskCard(data) {
   var _a = (0, react_1.useContext)(context_1["default"]),
       handleShowEditor = _a.handleShowEditor,
+      handleShowTask = _a.handleShowTask,
       handleShowdelete = _a.handleShowdelete,
       setFormData = _a.setFormData,
       setSelectedCard = _a.setSelectedCard,
@@ -3101,26 +3436,33 @@ function TaskCard(data) {
     setSelectedCard(__assign(__assign({}, selectedCard), (_a = {}, _a[task.id] = true, _a)));
   };
 
+  var handleDetail = function handleDetail() {
+    var _a;
+
+    setFormData(task);
+    handleShowTask();
+    setSelectedCard(__assign(__assign({}, selectedCard), (_a = {}, _a[task.id] = true, _a)));
+  };
+
   return react_1["default"].createElement("div", {
-    className: "flex ".concat(selectedCard[task.id] ? 'bg-green-100' : 'bg-blue-50', " border ").concat(selectedCard[task.id] ? 'border-green-200' : 'border-blue-100', " px-5 py-2 rounded-lg h-full")
+    className: "flex ".concat(selectedCard[task.id] ? 'bg-green-100' : 'bg-blue-50', " border ").concat(selectedCard[task.id] ? 'border-green-200' : 'border-blue-100', " px-5 py-2 rounded-lg h-full bg-opacity-50")
   }, react_1["default"].createElement("div", {
     className: ""
   }, react_1["default"].createElement("div", {
     className: "font-semibold mb-2"
+  }, react_1["default"].createElement("button", {
+    onClick: handleDetail,
+    className: 'hover:underline'
   }, react_1["default"].createElement("span", {
     className: "font-bold"
-  }, task.id), " ", task.title), react_1["default"].createElement("div", {
+  }, task.id), " ", task.title)), react_1["default"].createElement("div", {
     className: "flex items-center gap-2"
   }, "Ficheiros", react_1["default"].createElement("div", {
     className: ""
-  }, task.files.length)), react_1["default"].createElement("div", {
+  }, task.files.length)), react_1["default"].createElement(task_status_card_1["default"], {
+    status: task.status
+  }), react_1["default"].createElement("div", {
     className: "flex gap-3 mt-2"
-  }, react_1["default"].createElement("div", {
-    className: ""
-  }, "Estado"), react_1["default"].createElement("div", {
-    className: ""
-  }, task.status)), react_1["default"].createElement("div", {
-    className: "flex gap-3"
   }, react_1["default"].createElement(button_1.ButtonBlue, {
     onClick: handleEdit
   }, react_1["default"].createElement(bs_1.BsPencil, null)), react_1["default"].createElement(button_1.ButtonRed, {
@@ -3129,6 +3471,72 @@ function TaskCard(data) {
 }
 
 exports["default"] = TaskCard;
+
+/***/ }),
+
+/***/ "./resources/js/components/task-status-card.tsx":
+/*!******************************************************!*\
+  !*** ./resources/js/components/task-status-card.tsx ***!
+  \******************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.TaskStatusType = void 0;
+
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var TaskStatusType;
+
+(function (TaskStatusType) {
+  TaskStatusType["PENDING"] = "Pendente";
+  TaskStatusType["ACTIVE"] = "Activo";
+  TaskStatusType["DONE"] = "Feito";
+})(TaskStatusType = exports.TaskStatusType || (exports.TaskStatusType = {}));
+
+function TaskStatusCard(data) {
+  var classList, classText;
+
+  switch (data.status) {
+    case TaskStatusType.ACTIVE:
+      classList = 'bg-blue-400 border-blue-500';
+      classText = 'text-blue-400';
+      break;
+
+    case TaskStatusType.DONE:
+      classList = 'bg-green-400 border-green-500';
+      classText = 'text-green-400';
+      break;
+
+    case TaskStatusType.PENDING:
+      classList = 'bg-yellow-400 border-yellow-500';
+      classText = 'text-yellow-400';
+      break;
+
+    default:
+      break;
+  }
+
+  return react_1["default"].createElement("div", {
+    className: "flex items-center gap-2 mt-2"
+  }, react_1["default"].createElement("div", {
+    className: "inline-block items-center justify-center w-4 h-4 rounded-full ".concat(classList)
+  }), react_1["default"].createElement("span", null, "Estado:"), react_1["default"].createElement("span", {
+    className: "font-semibold ".concat(classText)
+  }, data.status));
+}
+
+exports["default"] = TaskStatusCard;
 
 /***/ }),
 
@@ -3778,6 +4186,8 @@ var TaskController_1 = __webpack_require__(/*! ../../app/controllers/TaskControl
 
 var task_card_delete_1 = __webpack_require__(/*! ../../components/task-card-delete */ "./resources/js/components/task-card-delete.tsx");
 
+var task_card_detail_1 = __importDefault(__webpack_require__(/*! ../../components/task-card-detail */ "./resources/js/components/task-card-detail.tsx"));
+
 function Tasks() {
   var _this = this;
 
@@ -3797,13 +4207,21 @@ function Tasks() {
       showModalDelete = _d[0],
       setShowModalDelete = _d[1];
 
-  var _e = (0, react_1.useState)({}),
-      formData = _e[0],
-      setFormData = _e[1];
+  var _e = (0, react_1.useState)(false),
+      showModalDetail = _e[0],
+      setShowModalDetail = _e[1];
 
-  var _f = (0, react_1.useState)([0, false]),
-      selectedCard = _f[0],
-      setSelectedCard = _f[1];
+  var _f = (0, react_1.useState)({}),
+      formData = _f[0],
+      setFormData = _f[1];
+
+  var _g = (0, react_1.useState)([0, false]),
+      selectedCard = _g[0],
+      setSelectedCard = _g[1];
+
+  var _h = (0, react_1.useState)(false),
+      softDelete = _h[0],
+      setSoftDelete = _h[1];
 
   (0, react_1.useEffect)(function () {
     loadData();
@@ -3815,6 +4233,11 @@ function Tasks() {
 
   var handleShowdelete = function handleShowdelete() {
     setShowModalDelete(true);
+    setSoftDelete(false);
+  };
+
+  var handleShowTask = function handleShowTask() {
+    setShowModalDetail(true);
   };
 
   var loadData = function loadData() {
@@ -3830,6 +4253,7 @@ function Tasks() {
   var handClose = function handClose() {
     setShowModal(false);
     setShowModalDelete(false);
+    setShowModalDetail(false);
     setFormData({});
     setTimeout(function () {
       setSelectedCard([0, false]);
@@ -3890,7 +4314,7 @@ function Tasks() {
             e.preventDefault();
             return [4
             /*yield*/
-            , TaskController_1.TaskController["delete"](formData.id)];
+            , TaskController_1.TaskController["delete"](formData.id, softDelete)];
 
           case 1:
             response = _a.sent();
@@ -3918,7 +4342,7 @@ function Tasks() {
     className: "mb-2"
   }, react_1["default"].createElement(button_1.ButtonBlue, {
     onClick: handleShowEditor
-  }, react_1["default"].createElement(bs_1.BsPlusCircle, null), "Nova")), react_1["default"].createElement(context_1["default"].Provider, {
+  }, react_1["default"].createElement(bs_1.BsPlusCircle, null), "Nova tarefa")), react_1["default"].createElement(context_1["default"].Provider, {
     value: {
       handClose: handClose,
       handleSubmit: handleSubmit,
@@ -3931,14 +4355,23 @@ function Tasks() {
   })), react_1["default"].createElement(context_1["default"].Provider, {
     value: {
       handClose: handClose,
-      handleSubmitDelete: handleSubmitDelete
+      handleSubmitDelete: handleSubmitDelete,
+      setSoftDelete: setSoftDelete,
+      softDelete: softDelete
     }
-  }, react_1["default"].createElement(task_card_delete_1.TaskCardDelete, {
+  }, showModalDelete && react_1["default"].createElement(task_card_delete_1.TaskCardDelete, {
     show: showModalDelete,
     task: formData
+  })), react_1["default"].createElement(context_1["default"].Provider, {
+    value: {
+      handClose: handClose
+    }
+  }, showModalDetail && react_1["default"].createElement(task_card_detail_1["default"], {
+    show: showModalDetail,
+    id: formData.id
   })), tasks.length < 1 ? react_1["default"].createElement("div", {
-    className: ""
-  }) : react_1["default"].createElement("div", {
+    className: "flex items-center gap-x-2 bg-blue-50 border border-blue-100 px-7 py-4 text-center"
+  }, react_1["default"].createElement(bs_1.BsInfoCircle, null), "Nenhuma tarefa de momento. Comece a criar uma.") : react_1["default"].createElement("div", {
     className: ""
   }, react_1["default"].createElement("ul", {
     className: 'grid grid-cols-3 gap-4'
@@ -3951,6 +4384,7 @@ function Tasks() {
         handClose: handClose,
         setFormData: setFormData,
         handleShowEditor: handleShowEditor,
+        handleShowTask: handleShowTask,
         handleShowdelete: handleShowdelete,
         setSelectedCard: setSelectedCard,
         selectedCard: selectedCard
@@ -4009,6 +4443,153 @@ var MyRoutes = function MyRoutes() {
 };
 
 exports["default"] = MyRoutes;
+
+/***/ }),
+
+/***/ "./resources/js/utils/file-helper.tsx":
+/*!********************************************!*\
+  !*** ./resources/js/utils/file-helper.tsx ***!
+  \********************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.FileHelper = exports.FileExtension = exports.FileType = void 0;
+var FileType;
+
+(function (FileType) {
+  FileType["IMAGE"] = "image";
+  FileType["VIDEO"] = "video";
+  FileType["AUDIO"] = "audio";
+  FileType["ARCHIVE"] = "archive";
+  FileType["LINK"] = "link";
+})(FileType = exports.FileType || (exports.FileType = {}));
+
+var FileExtension;
+
+(function (FileExtension) {
+  FileExtension["PDF"] = "pdf";
+  FileExtension["DOC"] = "doc";
+  FileExtension["DOCX"] = "docx";
+  FileExtension["XLS"] = "xls";
+  FileExtension["XLSX"] = "xlsx";
+})(FileExtension = exports.FileExtension || (exports.FileExtension = {}));
+
+var FileHelper =
+/** @class */
+function () {
+  function FileHelper() {}
+
+  FileHelper.getExtension = function (filename, lowercase) {
+    if (lowercase === void 0) {
+      lowercase = true;
+    }
+
+    if (filename.indexOf('.') > 0) {
+      filename = filename.split('.')[filename.split('.').length - 1];
+      return lowercase ? filename.toLowerCase() : filename;
+    }
+  };
+
+  FileHelper.getName = function (filename) {
+    var file = this.getNameWithExtension(filename);
+
+    if (file.indexOf('.') > 0) {
+      return file.split('.')[0];
+    }
+
+    return file;
+  };
+
+  FileHelper.getNameWithExtension = function (filename) {
+    if (filename.indexOf('/') > 0) {
+      return filename.split('/')[filename.split('/').length - 1];
+    }
+
+    return filename;
+  };
+
+  FileHelper.getType = function (filename) {
+    if (this.isImage(filename)) {
+      return FileType.IMAGE;
+    }
+
+    if (this.isAudio(filename)) {
+      return FileType.AUDIO;
+    }
+
+    if (this.isVideo(filename)) {
+      return FileType.VIDEO;
+    }
+
+    if (this.isLink(filename)) {
+      return FileType.LINK;
+    }
+
+    if (this.isArchive(filename)) {
+      return FileType.ARCHIVE;
+    }
+  };
+
+  FileHelper.isImage = function (filename) {
+    var extension = this.getExtension(filename);
+    return this.EXT_IMAGE.split(',').find(function (ext) {
+      return ext == extension;
+    }) ? true : false;
+  };
+
+  FileHelper.isAudio = function (filename) {
+    var extension = this.getExtension(filename);
+    return this.EXT_AUDIO.split(',').find(function (ext) {
+      return ext == extension;
+    }) ? true : false;
+  };
+
+  FileHelper.isVideo = function (filename) {
+    var extension = this.getExtension(filename);
+    return this.EXT_VIDEO.split(',').find(function (ext) {
+      return ext == extension;
+    }) ? true : false;
+  };
+
+  FileHelper.isLink = function (filename) {
+    var ext = this.getExtension(filename);
+    return !ext;
+  };
+
+  FileHelper.isArchive = function (filename) {
+    var ext = this.getExtension(filename);
+    return ext != '' && ext != 'undefined' && !this.isImage(filename) && !this.isAudio(filename) && !this.isVideo(filename);
+  };
+
+  FileHelper.convertToBlobURL = function (file) {
+    return URL.createObjectURL(file);
+  };
+
+  FileHelper.convertToBasecode = function (file) {
+    return URL.createObjectURL(file);
+  };
+
+  FileHelper.EXT_IMAGE = "bmp,dib,gif,ico,jpe,jpeg,jpg,pjpeg,png,jfif";
+  /**
+   * Valid audio's extensions
+   */
+
+  FileHelper.EXT_AUDIO = "3ga,amr,mp3,m4a,wav,wma";
+  /**
+   * Valid video's extensions
+   */
+  // const EXT_VIDEO = "avi,3g2,3gp,flv,m4v,mp4,mpg,mov,rmvb,mkv,wmv,vob";
+
+  FileHelper.EXT_VIDEO = "avi,3gpm4v,mp4,mpg,mov,mkv,wmv";
+  return FileHelper;
+}();
+
+exports.FileHelper = FileHelper;
 
 /***/ }),
 

@@ -1,18 +1,21 @@
-import React, { ChangeEvent, FormEvent, useContext, useState } from 'react';
+import React, { ChangeEvent, useContext, useState } from 'react';
 import { ITask } from '../app/types/task';
-import {Modal} from './modal';
+import { Modal } from './modal';
 import Context from './context'
-import { ButtonBlue, ButtonGray, ButtonGrayLight, ButtonRed } from './button';
-import { BsTrash, BsX } from 'react-icons/bs';
+import { ButtonBlue, ButtonGray, ButtonGrayLight, ButtonRed, ButtonYellow } from './button';
+import { BsRecycle, BsTrash, BsX } from 'react-icons/bs';
 
 type Props = {
     show: boolean
     task: ITask
 }
 export function TaskCardDelete(prop: Props) {
-    const { handClose, handleSubmitDelete } = useContext(Context)
+    const { handClose, handleSubmitDelete, setSoftDelete, softDelete } = useContext(Context)
     const task = prop.task
 
+    const handleSoftDelete = (e: ChangeEvent<HTMLInputElement>) => {
+        setSoftDelete(!e.target.checked)
+    }
     return (
         <Modal show={prop.show}>
             <div className="bg-white px-6 py-8" style={{ width: '100%', maxWidth: '500px' }}>
@@ -21,10 +24,19 @@ export function TaskCardDelete(prop: Props) {
                     <div className="">
                         Deseja realmente excluir a tarefa <b>{task.title}</b>?
                     </div>
+                    <div className="flex items-center gap-2">
+                        <label htmlFor="soft_delete" className='text-sm'>Excluir permanentemente</label>
+                        <input type="checkbox" name='soft_delete' id='soft_delete' defaultChecked={!softDelete} onChange={handleSoftDelete} />
+                    </div>
                     <div className="flex gap-2">
-                        <ButtonRed type='submit'>
-                            <BsTrash /> Excluir
-                        </ButtonRed>
+                        {softDelete ?
+                            <ButtonYellow type='submit'>
+                                <BsRecycle /> Mover para lixeira
+                            </ButtonYellow> :
+                            <ButtonRed type='submit'>
+                                <BsTrash /> Excluir
+                            </ButtonRed>
+                        }
                         <ButtonGrayLight type='reset' onClick={handClose}>
                             Fechar
                             <BsX />
