@@ -2262,7 +2262,7 @@ function () {
 
   TaskController.create = function (task) {
     return __awaiter(this, void 0, void 0, function () {
-      var feedback, dataValues_1, data_1, response;
+      var feedback, data, response;
       return __generator(this, function (_a) {
         switch (_a.label) {
           case 0:
@@ -2298,26 +2298,12 @@ function () {
             , 5];
 
           case 3:
-            dataValues_1 = Object.values(task);
-            data_1 = new FormData();
-            Object.keys(task).forEach(function (key, i) {
-              var value = dataValues_1[i];
-
-              if (key == 'file') {
-                var files = value;
-
-                for (var i_1 = 0; i_1 < files.length; i_1++) {
-                  data_1.append('file[' + i_1 + ']', files[i_1]);
-                }
-              } else {
-                data_1.append(key, value);
-              }
-            });
+            data = this.preparedformData(task);
             return [4
             /*yield*/
             , http_client_1.HttpClient.post({
               uri: "/tasks/create",
-              data: data_1
+              data: data
             })];
 
           case 4:
@@ -2343,7 +2329,7 @@ function () {
 
   TaskController.update = function (task) {
     return __awaiter(this, void 0, void 0, function () {
-      var feedback, response;
+      var feedback, data, response;
       return __generator(this, function (_a) {
         switch (_a.label) {
           case 0:
@@ -2388,11 +2374,12 @@ function () {
             , 6];
 
           case 4:
+            data = this.preparedformData(task);
             return [4
             /*yield*/
             , http_client_1.HttpClient.post({
               uri: "/tasks/".concat(task.id, "/update"),
-              data: task
+              data: data
             })];
 
           case 5:
@@ -2459,6 +2446,25 @@ function () {
         }
       });
     });
+  };
+
+  TaskController.preparedformData = function (data) {
+    var dataValues = Object.values(data);
+    var formData = new FormData();
+    Object.keys(data).forEach(function (key, i) {
+      var value = dataValues[i];
+
+      if (key == 'file') {
+        var files = value;
+
+        for (var i_1 = 0; i_1 < files.length; i_1++) {
+          formData.append('file[' + i_1 + ']', files[i_1]);
+        }
+      } else {
+        formData.append(key, value);
+      }
+    });
+    return formData;
   };
 
   return TaskController;

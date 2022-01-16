@@ -18,19 +18,7 @@ export class TaskController {
         } else if (!task.status || !task.status.trim()) {
             feedback.message = 'Informe o estado da tarefa.'
         } else {
-            const dataValues = Object.values(task as Object);
-            const data = new FormData()
-            Object.keys(task).forEach(function (key, i) {
-                const value = dataValues[i]
-                if (key == 'file') {
-                    const files = value
-                    for (let i = 0; i < files.length; i++) {
-                        data.append('file[' + i + ']', files[i])
-                    }
-                } else {
-                    data.append(key, value);
-                }
-            })
+            const data = this.preparedformData(task)
             const response = await HttpClient.post({ uri: `/tasks/create`, data })
             feedback = response.data
         }
@@ -54,7 +42,8 @@ export class TaskController {
         } else if (!task.status || !task.status.trim()) {
             feedback.message = 'Informe o estado da tarefa.'
         } else {
-            const response = await HttpClient.post({ uri: `/tasks/${task.id}/update`, data: task })
+            const data = this.preparedformData(task)
+            const response = await HttpClient.post({ uri: `/tasks/${task.id}/update`, data })
             feedback = response.data
         }
         return feedback
@@ -76,5 +65,22 @@ export class TaskController {
             feedback = response.data
         }
         return feedback
+    }
+
+    private static preparedformData(data: object): FormData {
+        const dataValues = Object.values(data);
+        const formData = new FormData()
+        Object.keys(data).forEach(function (key, i) {
+            const value = dataValues[i]
+            if (key == 'file') {
+                const files = value
+                for (let i = 0; i < files.length; i++) {
+                    formData.append('file[' + i + ']', files[i])
+                }
+            } else {
+                formData.append(key, value);
+            }
+        })
+        return formData
     }
 }
