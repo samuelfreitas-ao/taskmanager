@@ -2375,7 +2375,7 @@ function () {
             return [4
             /*yield*/
             , http_client_1.HttpClient.post({
-              uri: "/tasks/".concat(id, "/delete").concat(soft && '?soft=true')
+              uri: "/tasks/".concat(id, "/delete").concat(soft ? '?soft=true' : '')
             })];
 
           case 2:
@@ -2628,6 +2628,7 @@ var __importDefault = this && this.__importDefault || function (mod) {
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
+exports.Modal = void 0;
 
 var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 
@@ -2644,12 +2645,10 @@ function Modal(_a) {
     className: " flex flex-col items-center h-full p-4 sm:p-2 sm:px-8 sm:py-4 overflow-y-auto"
   }, react_1["default"].createElement("div", {
     className: "flex flex-col justify-center items-center w-full xl:w-4/5 h-full px-4 py-4 rounded-lg overflow-y-auto shadow p-5"
-  }, react_1["default"].createElement("div", {
-    className: ""
-  }, children)))))));
+  }, children))))));
 }
 
-exports["default"] = Modal;
+exports.Modal = Modal;
 
 /***/ }),
 
@@ -2733,6 +2732,106 @@ Object.defineProperty(exports, "SpinnerHorizontalCircle", ({
 
 /***/ }),
 
+/***/ "./resources/js/components/task-card-delete.tsx":
+/*!******************************************************!*\
+  !*** ./resources/js/components/task-card-delete.tsx ***!
+  \******************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  Object.defineProperty(o, k2, {
+    enumerable: true,
+    get: function get() {
+      return m[k];
+    }
+  });
+} : function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  o[k2] = m[k];
+});
+
+var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (o, v) {
+  Object.defineProperty(o, "default", {
+    enumerable: true,
+    value: v
+  });
+} : function (o, v) {
+  o["default"] = v;
+});
+
+var __importStar = this && this.__importStar || function (mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) {
+    if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+  }
+
+  __setModuleDefault(result, mod);
+
+  return result;
+};
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.TaskCardDelete = void 0;
+
+var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var modal_1 = __webpack_require__(/*! ./modal */ "./resources/js/components/modal.tsx");
+
+var context_1 = __importDefault(__webpack_require__(/*! ./context */ "./resources/js/components/context.tsx"));
+
+var button_1 = __webpack_require__(/*! ./button */ "./resources/js/components/button.tsx");
+
+var bs_1 = __webpack_require__(/*! react-icons/bs */ "./node_modules/react-icons/bs/index.esm.js");
+
+function TaskCardDelete(prop) {
+  var _a = (0, react_1.useContext)(context_1["default"]),
+      handClose = _a.handClose,
+      handleSubmitDelete = _a.handleSubmitDelete;
+
+  var task = prop.task;
+  return react_1["default"].createElement(modal_1.Modal, {
+    show: prop.show
+  }, react_1["default"].createElement("div", {
+    className: "bg-white px-6 py-8",
+    style: {
+      width: '100%',
+      maxWidth: '500px'
+    }
+  }, react_1["default"].createElement("form", {
+    action: "",
+    onSubmit: handleSubmitDelete,
+    className: 'grid gap-y-2'
+  }, react_1["default"].createElement("div", {
+    className: "mb-2 pb-2 border-b"
+  }, "Excluir tarefa"), react_1["default"].createElement("div", {
+    className: ""
+  }, "Deseja realmente excluir a tarefa ", react_1["default"].createElement("b", null, task.title), "?"), react_1["default"].createElement("div", {
+    className: "flex gap-2"
+  }, react_1["default"].createElement(button_1.ButtonRed, {
+    type: 'submit'
+  }, react_1["default"].createElement(bs_1.BsTrash, null), " Excluir"), react_1["default"].createElement(button_1.ButtonGrayLight, {
+    type: 'reset',
+    onClick: handClose
+  }, "Fechar", react_1["default"].createElement(bs_1.BsX, null))))));
+}
+
+exports.TaskCardDelete = TaskCardDelete;
+
+/***/ }),
+
 /***/ "./resources/js/components/task-card-editor.tsx":
 /*!******************************************************!*\
   !*** ./resources/js/components/task-card-editor.tsx ***!
@@ -2804,7 +2903,7 @@ Object.defineProperty(exports, "__esModule", ({
 
 var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 
-var modal_1 = __importDefault(__webpack_require__(/*! ./modal */ "./resources/js/components/modal.tsx"));
+var modal_1 = __webpack_require__(/*! ./modal */ "./resources/js/components/modal.tsx");
 
 var context_1 = __importDefault(__webpack_require__(/*! ./context */ "./resources/js/components/context.tsx"));
 
@@ -2819,7 +2918,7 @@ function TaskCardEditor(prop) {
       formData = _a.formData,
       setFormData = _a.setFormData;
 
-  var task = prop.task;
+  var task = JSON.stringify(prop.task) != '{}' ? prop.task : undefined;
 
   var handleChange = function handleChange(event) {
     var _a, _b;
@@ -2836,16 +2935,20 @@ function TaskCardEditor(prop) {
     }
   };
 
-  return react_1["default"].createElement(modal_1["default"], {
+  return react_1["default"].createElement(modal_1.Modal, {
     show: prop.show
   }, react_1["default"].createElement("div", {
-    className: "w-96 bg-white px-6 py-8"
+    className: "bg-white px-6 py-8",
+    style: {
+      width: '100%',
+      maxWidth: '900px'
+    }
   }, react_1["default"].createElement("form", {
     action: "",
     onSubmit: handleSubmit,
-    className: 'flex flex-col gap-y-2'
+    className: 'grid gap-y-2'
   }, react_1["default"].createElement("div", {
-    className: "mb-2 pb-2 border-b"
+    className: "mb-2 pb-2 border-b font-semibold"
   }, task ? 'Editar' : 'Nova', " tarefa ", task && task.title), react_1["default"].createElement("div", {
     className: "flex"
   }, react_1["default"].createElement("input", {
@@ -2904,6 +3007,22 @@ exports["default"] = TaskCardEditor;
 "use strict";
 
 
+var __assign = this && this.__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+
+      for (var p in s) {
+        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+    }
+
+    return t;
+  };
+
+  return __assign.apply(this, arguments);
+};
+
 var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
   if (k2 === undefined) k2 = k;
   Object.defineProperty(o, k2, {
@@ -2958,12 +3077,32 @@ var context_1 = __importDefault(__webpack_require__(/*! ./context */ "./resource
 
 function TaskCard(data) {
   var _a = (0, react_1.useContext)(context_1["default"]),
-      handleShow = _a.handleShow,
-      setFormData = _a.setFormData;
+      handleShowEditor = _a.handleShowEditor,
+      handleShowdelete = _a.handleShowdelete,
+      setFormData = _a.setFormData,
+      setSelectedCard = _a.setSelectedCard,
+      selectedCard = _a.selectedCard;
 
   var task = data.task;
+
+  var handleEdit = function handleEdit() {
+    var _a;
+
+    setFormData(task);
+    handleShowEditor();
+    setSelectedCard(__assign(__assign({}, selectedCard), (_a = {}, _a[task.id] = true, _a)));
+  };
+
+  var handleDelete = function handleDelete() {
+    var _a;
+
+    setFormData(task);
+    handleShowdelete();
+    setSelectedCard(__assign(__assign({}, selectedCard), (_a = {}, _a[task.id] = true, _a)));
+  };
+
   return react_1["default"].createElement("div", {
-    className: 'flex bg-blue-50 border border-blue-100 px-5 py-2 rounded-lg h-full'
+    className: "flex ".concat(selectedCard[task.id] ? 'bg-green-100' : 'bg-blue-50', " border ").concat(selectedCard[task.id] ? 'border-green-200' : 'border-blue-100', " px-5 py-2 rounded-lg h-full")
   }, react_1["default"].createElement("div", {
     className: ""
   }, react_1["default"].createElement("div", {
@@ -2983,11 +3122,10 @@ function TaskCard(data) {
   }, task.status)), react_1["default"].createElement("div", {
     className: "flex gap-3"
   }, react_1["default"].createElement(button_1.ButtonBlue, {
-    onClick: function onClick() {
-      setFormData(task);
-      handleShow();
-    }
-  }, react_1["default"].createElement(bs_1.BsPencil, null)), react_1["default"].createElement(button_1.ButtonRed, null, react_1["default"].createElement(bs_1.BsTrash, null)))));
+    onClick: handleEdit
+  }, react_1["default"].createElement(bs_1.BsPencil, null)), react_1["default"].createElement(button_1.ButtonRed, {
+    onClick: handleDelete
+  }, react_1["default"].createElement(bs_1.BsTrash, null)))));
 }
 
 exports["default"] = TaskCard;
@@ -3638,6 +3776,8 @@ var button_1 = __webpack_require__(/*! ../../components/button */ "./resources/j
 
 var TaskController_1 = __webpack_require__(/*! ../../app/controllers/TaskController */ "./resources/js/app/controllers/TaskController.ts");
 
+var task_card_delete_1 = __webpack_require__(/*! ../../components/task-card-delete */ "./resources/js/components/task-card-delete.tsx");
+
 function Tasks() {
   var _this = this;
 
@@ -3653,16 +3793,28 @@ function Tasks() {
       showModal = _c[0],
       setShowModal = _c[1];
 
-  var _d = (0, react_1.useState)({}),
-      formData = _d[0],
-      setFormData = _d[1];
+  var _d = (0, react_1.useState)(false),
+      showModalDelete = _d[0],
+      setShowModalDelete = _d[1];
+
+  var _e = (0, react_1.useState)({}),
+      formData = _e[0],
+      setFormData = _e[1];
+
+  var _f = (0, react_1.useState)([0, false]),
+      selectedCard = _f[0],
+      setSelectedCard = _f[1];
 
   (0, react_1.useEffect)(function () {
     loadData();
   }, []);
 
-  var handleShow = function handleShow() {
+  var handleShowEditor = function handleShowEditor() {
     setShowModal(true);
+  };
+
+  var handleShowdelete = function handleShowdelete() {
+    setShowModalDelete(true);
   };
 
   var loadData = function loadData() {
@@ -3677,7 +3829,11 @@ function Tasks() {
 
   var handClose = function handClose() {
     setShowModal(false);
+    setShowModalDelete(false);
     setFormData({});
+    setTimeout(function () {
+      setSelectedCard([0, false]);
+    }, 1500);
   };
 
   var handleSubmit = function handleSubmit(e) {
@@ -3725,6 +3881,33 @@ function Tasks() {
     });
   };
 
+  var handleSubmitDelete = function handleSubmitDelete(e) {
+    return __awaiter(_this, void 0, void 0, function () {
+      var response;
+      return __generator(this, function (_a) {
+        switch (_a.label) {
+          case 0:
+            e.preventDefault();
+            return [4
+            /*yield*/
+            , TaskController_1.TaskController["delete"](formData.id)];
+
+          case 1:
+            response = _a.sent();
+
+            if (!response.result) {} else {
+              handClose();
+              loadData();
+            }
+
+            return [2
+            /*return*/
+            ];
+        }
+      });
+    });
+  };
+
   if (loading) {
     return react_1["default"].createElement(loading_1["default"], null);
   }
@@ -3734,7 +3917,7 @@ function Tasks() {
   }, "Tarefas (", react_1["default"].createElement("small", null, tasks.length), ")"), react_1["default"].createElement("div", {
     className: "mb-2"
   }, react_1["default"].createElement(button_1.ButtonBlue, {
-    onClick: handleShow
+    onClick: handleShowEditor
   }, react_1["default"].createElement(bs_1.BsPlusCircle, null), "Nova")), react_1["default"].createElement(context_1["default"].Provider, {
     value: {
       handClose: handClose,
@@ -3744,6 +3927,14 @@ function Tasks() {
     }
   }, react_1["default"].createElement(task_card_editor_1["default"], {
     show: showModal,
+    task: formData
+  })), react_1["default"].createElement(context_1["default"].Provider, {
+    value: {
+      handClose: handClose,
+      handleSubmitDelete: handleSubmitDelete
+    }
+  }, react_1["default"].createElement(task_card_delete_1.TaskCardDelete, {
+    show: showModalDelete,
     task: formData
   })), tasks.length < 1 ? react_1["default"].createElement("div", {
     className: ""
@@ -3759,9 +3950,13 @@ function Tasks() {
       value: {
         handClose: handClose,
         setFormData: setFormData,
-        handleShow: handleShow
+        handleShowEditor: handleShowEditor,
+        handleShowdelete: handleShowdelete,
+        setSelectedCard: setSelectedCard,
+        selectedCard: selectedCard
       }
     }, react_1["default"].createElement(task_card_1["default"], {
+      selected: selectedCard[task.id],
       task: task
     })));
   })))));

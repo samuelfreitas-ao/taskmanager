@@ -10,19 +10,26 @@ import LoadingPage from '../loading';
 import Context from '../../components/context'
 import { ButtonBlue } from '../../components/button';
 import { TaskController } from '../../app/controllers/TaskController';
+import { TaskCardDelete } from '../../components/task-card-delete';
 
 export default function Tasks() {
     const [tasks, setTaks] = useState<ITask[]>([]);
     const [loading, setLoading] = useState<boolean>(true)
     const [showModal, setShowModal] = useState<boolean>(false)
+    const [showModalDelete, setShowModalDelete] = useState<boolean>(false)
     const [formData, setFormData] = useState<ITask>({} as ITask)
+    const [selectedCard, setSelectedCard] = useState<[any, boolean]>([0, false])
 
     useEffect(() => {
         loadData()
     }, []);
 
-    const handleShow = () => {
+    const handleShowEditor = () => {
         setShowModal(true)
+    }
+
+    const handleShowdelete = () => {
+        setShowModalDelete(true)
     }
 
     const loadData = () => {
@@ -37,7 +44,11 @@ export default function Tasks() {
 
     const handClose = () => {
         setShowModal(false)
+        setShowModalDelete(false)
         setFormData({} as ITask)
+        setTimeout(() => {
+            setSelectedCard([0, false])
+        }, 1500);
     }
 
     const handleSubmit = async (e: FormEvent) => {
@@ -56,6 +67,17 @@ export default function Tasks() {
         }
     }
 
+    const handleSubmitDelete = async (e: FormEvent) => {
+        e.preventDefault()
+        const response = await TaskController.delete(formData.id)
+
+        if (!response.result) {
+        } else {
+            handClose()
+            loadData()
+        }
+    }
+
     if (loading) {
         return <LoadingPage />
     }
@@ -64,13 +86,17 @@ export default function Tasks() {
             <div>
                 <div className="mb-5 font-semibold text-3xl">Tarefas (<small>{tasks.length}</small>)</div>
                 <div className="mb-2">
-                    <ButtonBlue onClick={handleShow}>
+                    <ButtonBlue onClick={handleShowEditor}>
                         <BsPlusCircle />
                         Nova
                     </ButtonBlue>
                 </div>
                 <Context.Provider value={{ handClose, handleSubmit, setFormData, formData }}>
                     <TaskCardEditor show={showModal} task={formData} />
+                </Context.Provider>
+
+                <Context.Provider value={{ handClose, handleSubmitDelete }}>
+                    <TaskCardDelete show={showModalDelete} task={formData} />
                 </Context.Provider>
                 {tasks.length < 1 ?
                     <div className=""></div>
@@ -79,10 +105,9 @@ export default function Tasks() {
                         <ul className='grid grid-cols-3 gap-4'>
                             {tasks.map((task) => (
                                 <li key={task.id} className=''>
-                                    <Context.Provider value={{ handClose, setFormData, handleShow }}>
-                                        <TaskCard task={task} />
+                                    <Context.Provider value={{ handClose, setFormData, handleShowEditor, handleShowdelete, setSelectedCard, selectedCard }}>
+                                        <TaskCard selected={selectedCard[task.id]} task={task} />
                                     </Context.Provider>
-
                                 </li>
                             ))}
                         </ul>

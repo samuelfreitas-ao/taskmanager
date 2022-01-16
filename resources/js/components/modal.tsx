@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function Modal({ children, show }: React.PropsWithChildren<{ show: boolean }>) {
+export  function Modal({ children, show }: React.PropsWithChildren<{ show: boolean }>) {
     return (
         <>
             {show &&
@@ -9,9 +9,9 @@ export default function Modal({ children, show }: React.PropsWithChildren<{ show
                         <div className="flex flex-col w-full h-full">
                             <div className=" flex flex-col items-center h-full p-4 sm:p-2 sm:px-8 sm:py-4 overflow-y-auto">
                                 <div className="flex flex-col justify-center items-center w-full xl:w-4/5 h-full px-4 py-4 rounded-lg overflow-y-auto shadow p-5">
-                                    <div className="">
+                                    {/* <div className=""> */}
                                         {children}
-                                    </div>
+                                    {/* </div> */}
                                 </div>
                             </div>
                         </div>

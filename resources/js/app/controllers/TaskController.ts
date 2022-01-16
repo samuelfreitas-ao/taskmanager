@@ -49,7 +49,7 @@ export class TaskController {
         if (!id || id < 1) {
             feedback.message = 'Tarefa não encontrada.'
         } else {
-            const response = await HttpClient.post({ uri: `/tasks/${id}/delete${soft && '?soft=true'}` })
+            const response = await HttpClient.post({ uri: `/tasks/${id}/delete${soft ? '?soft=true' : ''}` })
             feedback = response.data
         }
         return feedback
