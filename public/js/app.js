@@ -2266,38 +2266,10 @@ function () {
       return __generator(this, function (_a) {
         switch (_a.label) {
           case 0:
-            feedback = {
-              result: false,
-              message: '',
-              data: null
-            };
-            if (!(!task.title || !task.title.trim())) return [3
-            /*break*/
-            , 1];
-            feedback.message = 'Informe o título da tarefa.';
-            return [3
-            /*break*/
-            , 5];
-
-          case 1:
-            if (!(!task.description || !task.description.trim())) return [3
+            feedback = this.validate(task);
+            if (!feedback.result) return [3
             /*break*/
             , 2];
-            feedback.message = 'Informe a descrição da tarefa.';
-            return [3
-            /*break*/
-            , 5];
-
-          case 2:
-            if (!(!task.status || !task.status.trim())) return [3
-            /*break*/
-            , 3];
-            feedback.message = 'Informe o estado da tarefa.';
-            return [3
-            /*break*/
-            , 5];
-
-          case 3:
             data = this.preparedformData(task);
             return [4
             /*yield*/
@@ -2306,12 +2278,12 @@ function () {
               data: data
             })];
 
-          case 4:
+          case 1:
             response = _a.sent();
             feedback = response.data;
-            _a.label = 5;
+            _a.label = 2;
 
-          case 5:
+          case 2:
             return [2
             /*return*/
             , feedback];
@@ -2333,47 +2305,19 @@ function () {
       return __generator(this, function (_a) {
         switch (_a.label) {
           case 0:
-            feedback = {
-              result: false,
-              message: '',
-              data: null
-            };
+            feedback = this.validate(task);
             if (!(!task.id || task.id < 1)) return [3
             /*break*/
             , 1];
             feedback.message = 'Tarefa não encontrada.';
             return [3
             /*break*/
-            , 6];
+            , 3];
 
           case 1:
-            if (!(!task.title || !task.title.trim())) return [3
-            /*break*/
-            , 2];
-            feedback.message = 'Informe o título da tarefa.';
-            return [3
-            /*break*/
-            , 6];
-
-          case 2:
-            if (!(!task.description || !task.description.trim())) return [3
+            if (!feedback.result) return [3
             /*break*/
             , 3];
-            feedback.message = 'Informe a descrição da tarefa.';
-            return [3
-            /*break*/
-            , 6];
-
-          case 3:
-            if (!(!task.status || !task.status.trim())) return [3
-            /*break*/
-            , 4];
-            feedback.message = 'Informe o estado da tarefa.';
-            return [3
-            /*break*/
-            , 6];
-
-          case 4:
             data = this.preparedformData(task);
             return [4
             /*yield*/
@@ -2382,12 +2326,12 @@ function () {
               data: data
             })];
 
-          case 5:
+          case 2:
             response = _a.sent();
             feedback = response.data;
-            _a.label = 6;
+            _a.label = 3;
 
-          case 6:
+          case 3:
             return [2
             /*return*/
             , feedback];
@@ -2446,6 +2390,24 @@ function () {
         }
       });
     });
+  };
+
+  TaskController.validate = function (task) {
+    var feedback = {
+      result: false,
+      message: '',
+      data: null
+    };
+
+    if (!task.title || !task.title.trim()) {
+      feedback.message = 'Informe o título da tarefa.';
+    } else if (!task.description || !task.description.trim()) {
+      feedback.message = 'Informe a descrição da tarefa.';
+    } else if (!task.status || !task.status.trim()) {
+      feedback.message = 'Informe o estado da tarefa.';
+    }
+
+    return feedback;
   };
 
   TaskController.preparedformData = function (data) {
