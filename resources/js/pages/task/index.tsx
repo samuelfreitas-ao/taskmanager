@@ -2,7 +2,7 @@ import React, { FormEvent, useEffect, useState } from 'react';
 import { BsPlusCircle } from 'react-icons/bs'
 import { ITask } from '../../app/types/task';
 import Layout from '../../components/layout';
-import NewTaskCard from '../../components/new-task-card';
+import TaskCardEditor from '../../components/task-card-editor';
 import TaskCard from '../../components/task-card';
 import { HttpClient } from '../../libs/http/http-client';
 import LoadingPage from '../loading';
@@ -37,6 +37,7 @@ export default function Tasks() {
 
     const handClose = () => {
         setShowModal(false)
+        setFormData({} as ITask)
     }
 
     const handleSubmit = async (e: FormEvent) => {
@@ -69,7 +70,7 @@ export default function Tasks() {
                     , setFormData
                     , formData
                 }}>
-                    <NewTaskCard show={showModal} />
+                    <TaskCardEditor show={showModal} />
                 </Context.Provider>
                 {tasks.length < 1 ?
                     <div className=""></div>
