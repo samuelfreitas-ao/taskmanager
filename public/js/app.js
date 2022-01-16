@@ -2262,7 +2262,7 @@ function () {
 
   TaskController.create = function (task) {
     return __awaiter(this, void 0, void 0, function () {
-      var feedback, response;
+      var feedback, dataValues_1, data_1, response;
       return __generator(this, function (_a) {
         switch (_a.label) {
           case 0:
@@ -2298,11 +2298,26 @@ function () {
             , 5];
 
           case 3:
+            dataValues_1 = Object.values(task);
+            data_1 = new FormData();
+            Object.keys(task).forEach(function (key, i) {
+              var value = dataValues_1[i];
+
+              if (key == 'file') {
+                var files = value;
+
+                for (var i_1 = 0; i_1 < files.length; i_1++) {
+                  data_1.append('file[' + i_1 + ']', files[i_1]);
+                }
+              } else {
+                data_1.append(key, value);
+              }
+            });
             return [4
             /*yield*/
             , http_client_1.HttpClient.post({
               uri: "/tasks/create",
-              data: task
+              data: data_1
             })];
 
           case 4:
@@ -2625,6 +2640,49 @@ exports["default"] = Layout;
 
 /***/ }),
 
+/***/ "./resources/js/components/modal.tsx":
+/*!*******************************************!*\
+  !*** ./resources/js/components/modal.tsx ***!
+  \*******************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+function Modal(_a) {
+  var children = _a.children,
+      show = _a.show;
+  return react_1["default"].createElement(react_1["default"].Fragment, null, show && react_1["default"].createElement("div", {
+    className: "fixed top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50"
+  }, react_1["default"].createElement("div", {
+    className: "w-full h-full bg-no-repeat bg-cover bg-rounded-pattern"
+  }, react_1["default"].createElement("div", {
+    className: "flex flex-col w-full h-full"
+  }, react_1["default"].createElement("div", {
+    className: " flex flex-col items-center h-full p-4 sm:p-2 sm:px-8 sm:py-4 overflow-y-auto"
+  }, react_1["default"].createElement("div", {
+    className: "flex flex-col justify-center items-center w-full xl:w-4/5 h-full px-4 py-4 rounded-lg overflow-y-auto shadow p-5"
+  }, react_1["default"].createElement("div", {
+    className: ""
+  }, children)))))));
+}
+
+exports["default"] = Modal;
+
+/***/ }),
+
 /***/ "./resources/js/components/spinner/horizontal-circle/index.tsx":
 /*!*********************************************************************!*\
   !*** ./resources/js/components/spinner/horizontal-circle/index.tsx ***!
@@ -2702,6 +2760,168 @@ Object.defineProperty(exports, "SpinnerHorizontalCircle", ({
     return __importDefault(horizontal_circle_1)["default"];
   }
 }));
+
+/***/ }),
+
+/***/ "./resources/js/components/task-card-editor.tsx":
+/*!******************************************************!*\
+  !*** ./resources/js/components/task-card-editor.tsx ***!
+  \******************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __assign = this && this.__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+
+      for (var p in s) {
+        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+    }
+
+    return t;
+  };
+
+  return __assign.apply(this, arguments);
+};
+
+var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  Object.defineProperty(o, k2, {
+    enumerable: true,
+    get: function get() {
+      return m[k];
+    }
+  });
+} : function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  o[k2] = m[k];
+});
+
+var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (o, v) {
+  Object.defineProperty(o, "default", {
+    enumerable: true,
+    value: v
+  });
+} : function (o, v) {
+  o["default"] = v;
+});
+
+var __importStar = this && this.__importStar || function (mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) {
+    if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+  }
+
+  __setModuleDefault(result, mod);
+
+  return result;
+};
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var modal_1 = __importDefault(__webpack_require__(/*! ./modal */ "./resources/js/components/modal.tsx"));
+
+var serverContext_1 = __importDefault(__webpack_require__(/*! ./context/serverContext */ "./resources/js/components/context/serverContext.tsx"));
+
+var button_1 = __webpack_require__(/*! ./button */ "./resources/js/components/button.tsx");
+
+var bs_1 = __webpack_require__(/*! react-icons/bs */ "./node_modules/react-icons/bs/index.esm.js");
+
+function TaskCardEditor(prop) {
+  var _a = (0, react_1.useContext)(serverContext_1["default"]),
+      handClose = _a.handClose,
+      handleSubmit = _a.handleSubmit,
+      formData = _a.formData,
+      setFormData = _a.setFormData;
+
+  var task = prop.task;
+
+  var handleChange = function handleChange(event) {
+    var _a, _b;
+
+    var target = event.target;
+    var name = target.name,
+        value = target.value;
+
+    if (name == 'file') {
+      target.files;
+      setFormData(__assign(__assign({}, formData), (_a = {}, _a[name] = target.files, _a)));
+    } else {
+      setFormData(__assign(__assign({}, formData), (_b = {}, _b[name] = value, _b)));
+    }
+  };
+
+  return react_1["default"].createElement(modal_1["default"], {
+    show: prop.show
+  }, react_1["default"].createElement("div", {
+    className: "w-96 bg-white px-6 py-8"
+  }, react_1["default"].createElement("form", {
+    action: "",
+    onSubmit: handleSubmit,
+    className: 'flex flex-col gap-y-2'
+  }, react_1["default"].createElement("div", {
+    className: "mb-2 pb-2 border-b"
+  }, task ? 'Editar' : 'Nova', " tarefa"), react_1["default"].createElement("div", {
+    className: "flex"
+  }, react_1["default"].createElement("input", {
+    className: 'flex-1 focus:outline-none px-3 py-1 border rounded',
+    type: "text",
+    name: 'title',
+    onChange: handleChange,
+    defaultValue: task && task.title,
+    placeholder: "T\xEDtulo"
+  })), react_1["default"].createElement("div", {
+    className: "flex"
+  }, react_1["default"].createElement("textarea", {
+    className: 'flex-1 focus:outline-none px-3 py-1 border rounded',
+    name: 'description',
+    onChange: handleChange,
+    defaultValue: task && task.description,
+    placeholder: "Descri\xE7\xE3o"
+  })), react_1["default"].createElement("div", {
+    className: "flex"
+  }, react_1["default"].createElement("input", {
+    className: 'flex-1 focus:outline-none px-3 py-1 border rounded',
+    type: 'file',
+    multiple: true,
+    name: 'file',
+    onChange: handleChange
+  })), react_1["default"].createElement("div", {
+    className: "flex"
+  }, react_1["default"].createElement("select", {
+    className: 'flex-1 focus:outline-none px-3 py-1 border rounded',
+    name: 'status',
+    onChange: handleChange,
+    defaultValue: task ? task.status : ''
+  }, react_1["default"].createElement("option", {
+    value: "",
+    disabled: true
+  }, "-Selecine-"), react_1["default"].createElement("option", null, "Pendente"), react_1["default"].createElement("option", null, "Activo"), react_1["default"].createElement("option", null, "Feito"))), react_1["default"].createElement("div", {
+    className: "flex gap-2"
+  }, react_1["default"].createElement(button_1.ButtonBlue, {
+    type: 'submit'
+  }, task ? 'Salvar' : 'Criar'), react_1["default"].createElement(button_1.ButtonGrayLight, {
+    type: 'reset',
+    onClick: handClose
+  }, "Fechar", react_1["default"].createElement(bs_1.BsX, null))))));
+}
+
+exports["default"] = TaskCardEditor;
 
 /***/ }),
 
@@ -3383,7 +3603,7 @@ var bs_1 = __webpack_require__(/*! react-icons/bs */ "./node_modules/react-icons
 
 var layout_1 = __importDefault(__webpack_require__(/*! ../../components/layout */ "./resources/js/components/layout.tsx"));
 
-var new_task_card_1 = __importDefault(__webpack_require__(Object(function webpackMissingModule() { var e = new Error("Cannot find module '../../components/new-task-card'"); e.code = 'MODULE_NOT_FOUND'; throw e; }())));
+var task_card_editor_1 = __importDefault(__webpack_require__(/*! ../../components/task-card-editor */ "./resources/js/components/task-card-editor.tsx"));
 
 var task_card_1 = __importDefault(__webpack_require__(/*! ../../components/task-card */ "./resources/js/components/task-card.tsx"));
 
@@ -3436,6 +3656,7 @@ function Tasks() {
 
   var handClose = function handClose() {
     setShowModal(false);
+    setFormData({});
   };
 
   var handleSubmit = function handleSubmit(e) {
@@ -3483,7 +3704,7 @@ function Tasks() {
       setFormData: setFormData,
       formData: formData
     }
-  }, react_1["default"].createElement(new_task_card_1["default"], {
+  }, react_1["default"].createElement(task_card_editor_1["default"], {
     show: showModal
   })), tasks.length < 1 ? react_1["default"].createElement("div", {
     className: ""

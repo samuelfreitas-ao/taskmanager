@@ -34,7 +34,7 @@ class TaskController extends Controller
         $title = trim($request->title);
         $description = trim($request->description);
         $status = trim($request->status);
-        $file = $request->file;
+        $file = $request->file('file');
         if (!$title) {
             $feedback['message'] = 'Informe o título da tarefa.';
         } else if (!$description) {

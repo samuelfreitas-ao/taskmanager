@@ -18,7 +18,20 @@ export class TaskController {
         } else if (!task.status || !task.status.trim()) {
             feedback.message = 'Informe o estado da tarefa.'
         } else {
-            const response = await HttpClient.post({ uri: `/tasks/create`, data: task })
+            const dataValues = Object.values(task as Object);
+            const data = new FormData()
+            Object.keys(task).forEach(function (key, i) {
+                const value = dataValues[i]
+                if (key == 'file') {
+                    const files = value
+                    for (let i = 0; i < files.length; i++) {
+                        data.append('file[' + i + ']', files[i])
+                    }
+                } else {
+                    data.append(key, value);
+                }
+            })
+            const response = await HttpClient.post({ uri: `/tasks/create`, data })
             feedback = response.data
         }
         return feedback
