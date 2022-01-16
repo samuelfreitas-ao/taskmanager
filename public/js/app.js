@@ -2405,6 +2405,8 @@ function () {
       feedback.message = 'Informe a descrição da tarefa.';
     } else if (!task.status || !task.status.trim()) {
       feedback.message = 'Informe o estado da tarefa.';
+    } else {
+      feedback.result = true;
     }
 
     return feedback;
@@ -2422,7 +2424,7 @@ function () {
         for (var i_1 = 0; i_1 < files.length; i_1++) {
           formData.append('file[' + i_1 + ']', files[i_1]);
         }
-      } else {
+      } else if (key != 'id') {
         formData.append(key, value);
       }
     });
@@ -2546,10 +2548,10 @@ exports.ButtonAnchor = ButtonAnchor;
 
 /***/ }),
 
-/***/ "./resources/js/components/context/serverContext.tsx":
-/*!***********************************************************!*\
-  !*** ./resources/js/components/context/serverContext.tsx ***!
-  \***********************************************************/
+/***/ "./resources/js/components/context.tsx":
+/*!*********************************************!*\
+  !*** ./resources/js/components/context.tsx ***!
+  \*********************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
@@ -2804,14 +2806,14 @@ var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/reac
 
 var modal_1 = __importDefault(__webpack_require__(/*! ./modal */ "./resources/js/components/modal.tsx"));
 
-var serverContext_1 = __importDefault(__webpack_require__(/*! ./context/serverContext */ "./resources/js/components/context/serverContext.tsx"));
+var context_1 = __importDefault(__webpack_require__(/*! ./context */ "./resources/js/components/context.tsx"));
 
 var button_1 = __webpack_require__(/*! ./button */ "./resources/js/components/button.tsx");
 
 var bs_1 = __webpack_require__(/*! react-icons/bs */ "./node_modules/react-icons/bs/index.esm.js");
 
 function TaskCardEditor(prop) {
-  var _a = (0, react_1.useContext)(serverContext_1["default"]),
+  var _a = (0, react_1.useContext)(context_1["default"]),
       handClose = _a.handClose,
       handleSubmit = _a.handleSubmit,
       formData = _a.formData,
@@ -2844,7 +2846,7 @@ function TaskCardEditor(prop) {
     className: 'flex flex-col gap-y-2'
   }, react_1["default"].createElement("div", {
     className: "mb-2 pb-2 border-b"
-  }, task ? 'Editar' : 'Nova', " tarefa"), react_1["default"].createElement("div", {
+  }, task ? 'Editar' : 'Nova', " tarefa ", task && task.title), react_1["default"].createElement("div", {
     className: "flex"
   }, react_1["default"].createElement("input", {
     className: 'flex-1 focus:outline-none px-3 py-1 border rounded',
@@ -2902,6 +2904,40 @@ exports["default"] = TaskCardEditor;
 "use strict";
 
 
+var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  Object.defineProperty(o, k2, {
+    enumerable: true,
+    get: function get() {
+      return m[k];
+    }
+  });
+} : function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  o[k2] = m[k];
+});
+
+var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (o, v) {
+  Object.defineProperty(o, "default", {
+    enumerable: true,
+    value: v
+  });
+} : function (o, v) {
+  o["default"] = v;
+});
+
+var __importStar = this && this.__importStar || function (mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) {
+    if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+  }
+
+  __setModuleDefault(result, mod);
+
+  return result;
+};
+
 var __importDefault = this && this.__importDefault || function (mod) {
   return mod && mod.__esModule ? mod : {
     "default": mod
@@ -2912,9 +2948,19 @@ Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
 
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var bs_1 = __webpack_require__(/*! react-icons/bs */ "./node_modules/react-icons/bs/index.esm.js");
+
+var button_1 = __webpack_require__(/*! ./button */ "./resources/js/components/button.tsx");
+
+var context_1 = __importDefault(__webpack_require__(/*! ./context */ "./resources/js/components/context.tsx"));
 
 function TaskCard(data) {
+  var _a = (0, react_1.useContext)(context_1["default"]),
+      handleShow = _a.handleShow,
+      setFormData = _a.setFormData;
+
   var task = data.task;
   return react_1["default"].createElement("div", {
     className: 'flex bg-blue-50 border border-blue-100 px-5 py-2 rounded-lg h-full'
@@ -2934,7 +2980,14 @@ function TaskCard(data) {
     className: ""
   }, "Estado"), react_1["default"].createElement("div", {
     className: ""
-  }, task.status))));
+  }, task.status)), react_1["default"].createElement("div", {
+    className: "flex gap-3"
+  }, react_1["default"].createElement(button_1.ButtonBlue, {
+    onClick: function onClick() {
+      setFormData(task);
+      handleShow();
+    }
+  }, react_1["default"].createElement(bs_1.BsPencil, null)), react_1["default"].createElement(button_1.ButtonRed, null, react_1["default"].createElement(bs_1.BsTrash, null)))));
 }
 
 exports["default"] = TaskCard;
@@ -3579,7 +3632,7 @@ var http_client_1 = __webpack_require__(/*! ../../libs/http/http-client */ "./re
 
 var loading_1 = __importDefault(__webpack_require__(/*! ../loading */ "./resources/js/pages/loading/index.tsx"));
 
-var serverContext_1 = __importDefault(__webpack_require__(/*! ../../components/context/serverContext */ "./resources/js/components/context/serverContext.tsx"));
+var context_1 = __importDefault(__webpack_require__(/*! ../../components/context */ "./resources/js/components/context.tsx"));
 
 var button_1 = __webpack_require__(/*! ../../components/button */ "./resources/js/components/button.tsx");
 
@@ -3634,12 +3687,29 @@ function Tasks() {
         switch (_a.label) {
           case 0:
             e.preventDefault();
+            if (!(!formData.id || formData.id < 1)) return [3
+            /*break*/
+            , 2];
             return [4
             /*yield*/
             , TaskController_1.TaskController.create(formData)];
 
           case 1:
             response = _a.sent();
+            return [3
+            /*break*/
+            , 4];
+
+          case 2:
+            return [4
+            /*yield*/
+            , TaskController_1.TaskController.update(formData)];
+
+          case 3:
+            response = _a.sent();
+            _a.label = 4;
+
+          case 4:
             console.log(response.message);
 
             if (!response.result) {} else {
@@ -3665,7 +3735,7 @@ function Tasks() {
     className: "mb-2"
   }, react_1["default"].createElement(button_1.ButtonBlue, {
     onClick: handleShow
-  }, react_1["default"].createElement(bs_1.BsPlusCircle, null), "Nova")), react_1["default"].createElement(serverContext_1["default"].Provider, {
+  }, react_1["default"].createElement(bs_1.BsPlusCircle, null), "Nova")), react_1["default"].createElement(context_1["default"].Provider, {
     value: {
       handClose: handClose,
       handleSubmit: handleSubmit,
@@ -3673,7 +3743,8 @@ function Tasks() {
       formData: formData
     }
   }, react_1["default"].createElement(task_card_editor_1["default"], {
-    show: showModal
+    show: showModal,
+    task: formData
   })), tasks.length < 1 ? react_1["default"].createElement("div", {
     className: ""
   }) : react_1["default"].createElement("div", {
@@ -3684,9 +3755,15 @@ function Tasks() {
     return react_1["default"].createElement("li", {
       key: task.id,
       className: ''
+    }, react_1["default"].createElement(context_1["default"].Provider, {
+      value: {
+        handClose: handClose,
+        setFormData: setFormData,
+        handleShow: handleShow
+      }
     }, react_1["default"].createElement(task_card_1["default"], {
       task: task
-    }));
+    })));
   })))));
 }
 

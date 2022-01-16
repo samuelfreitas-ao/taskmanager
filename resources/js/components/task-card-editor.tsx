@@ -1,7 +1,7 @@
 import React, { ChangeEvent, FormEvent, useContext, useState } from 'react';
 import { ITask } from '../app/types/task';
 import Modal from './modal';
-import Context from './context/serverContext'
+import Context from './context'
 import { ButtonBlue, ButtonGray, ButtonGrayLight } from './button';
 import { BsX } from 'react-icons/bs';
 
@@ -29,7 +29,7 @@ export default function TaskCardEditor(prop: Props) {
         <Modal show={prop.show}>
             <div className="w-96 bg-white px-6 py-8">
                 <form action="" onSubmit={handleSubmit} className='flex flex-col gap-y-2'>
-                    <div className="mb-2 pb-2 border-b">{task ? 'Editar' : 'Nova'} tarefa</div>
+                    <div className="mb-2 pb-2 border-b">{task ? 'Editar' : 'Nova'} tarefa {task && task.title}</div>
                     <div className="flex">
                         <input className='flex-1 focus:outline-none px-3 py-1 border rounded'
                             type="text"

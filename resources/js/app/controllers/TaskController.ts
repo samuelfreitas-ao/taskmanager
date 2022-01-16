@@ -29,7 +29,7 @@ export class TaskController {
         let feedback = this.validate(task)
         if (!task.id || task.id < 1) {
             feedback.message = 'Tarefa não encontrada.'
-        } else if(feedback.result) {
+        } else if (feedback.result) {
             const data = this.preparedformData(task)
             const response = await HttpClient.post({ uri: `/tasks/${task.id}/update`, data })
             feedback = response.data
@@ -63,6 +63,8 @@ export class TaskController {
             feedback.message = 'Informe a descrição da tarefa.'
         } else if (!task.status || !task.status.trim()) {
             feedback.message = 'Informe o estado da tarefa.'
+        } else {
+            feedback.result = true
         }
         return feedback
     }
@@ -77,7 +79,7 @@ export class TaskController {
                 for (let i = 0; i < files.length; i++) {
                     formData.append('file[' + i + ']', files[i])
                 }
-            } else {
+            } else if (key != 'id') {
                 formData.append(key, value);
             }
         })

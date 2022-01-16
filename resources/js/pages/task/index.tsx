@@ -7,7 +7,7 @@ import TaskCard from '../../components/task-card';
 import { HttpClient } from '../../libs/http/http-client';
 import LoadingPage from '../loading';
 
-import Context from '../../components/context/serverContext'
+import Context from '../../components/context'
 import { ButtonBlue } from '../../components/button';
 import { TaskController } from '../../app/controllers/TaskController';
 
@@ -42,7 +42,12 @@ export default function Tasks() {
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault()
-        const response = await TaskController.create(formData)
+        let response
+        if (!formData.id || formData.id < 1) {
+            response = await TaskController.create(formData)
+        } else {
+            response = await TaskController.update(formData)
+        }
         console.log(response.message);
         if (!response.result) {
         } else {
@@ -64,13 +69,8 @@ export default function Tasks() {
                         Nova
                     </ButtonBlue>
                 </div>
-                <Context.Provider value={{
-                    handClose
-                    , handleSubmit
-                    , setFormData
-                    , formData
-                }}>
-                    <TaskCardEditor show={showModal} />
+                <Context.Provider value={{ handClose, handleSubmit, setFormData, formData }}>
+                    <TaskCardEditor show={showModal} task={formData} />
                 </Context.Provider>
                 {tasks.length < 1 ?
                     <div className=""></div>
@@ -79,7 +79,10 @@ export default function Tasks() {
                         <ul className='grid grid-cols-3 gap-4'>
                             {tasks.map((task) => (
                                 <li key={task.id} className=''>
-                                    <TaskCard task={task} />
+                                    <Context.Provider value={{ handClose, setFormData, handleShow }}>
+                                        <TaskCard task={task} />
+                                    </Context.Provider>
+
                                 </li>
                             ))}
                         </ul>
