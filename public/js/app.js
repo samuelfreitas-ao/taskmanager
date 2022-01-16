@@ -2649,8 +2649,8 @@ var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/r
 function Modal(_a) {
   var children = _a.children,
       show = _a.show;
-  return react_1["default"].createElement("div", {
-    className: "fixed top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 ".concat(!show && 'hidden')
+  return react_1["default"].createElement(react_1["default"].Fragment, null, show && react_1["default"].createElement("div", {
+    className: "fixed top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50"
   }, react_1["default"].createElement("div", {
     className: "w-full h-full bg-no-repeat bg-cover bg-rounded-pattern"
   }, react_1["default"].createElement("div", {
@@ -2661,7 +2661,7 @@ function Modal(_a) {
     className: "flex flex-col justify-center items-center w-full xl:w-4/5 h-full px-4 py-4 rounded-lg overflow-y-auto shadow p-5"
   }, react_1["default"].createElement("div", {
     className: ""
-  }, children))))));
+  }, children)))))));
 }
 
 exports["default"] = Modal;
