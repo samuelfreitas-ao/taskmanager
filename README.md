@@ -19,3 +19,5 @@ Execute os seguintes comandos:
 1. _php artisan migrate_: Cria toda a estrutura do banco de dados como definida no ficheiro _database/migrations_.
 2. _php artisan serve_: Inicia o servidor php para executar o projecto, o poderá ser acedido via http://127.0.0.1:8000
 3. _yarn dev_ ou _npm run dev_: Compila o código do reactjs convertendo em javascript puro para ser usado no projecto
+
+Encontre a documentação da API no link: https://documenter.getpostman.com/view/13837408/UVXkmZys
