@@ -3008,6 +3008,138 @@ Object.defineProperty(exports, "SpinnerHorizontalCircle", ({
 
 /***/ }),
 
+/***/ "./resources/js/components/task-board-card.tsx":
+/*!*****************************************************!*\
+  !*** ./resources/js/components/task-board-card.tsx ***!
+  \*****************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  Object.defineProperty(o, k2, {
+    enumerable: true,
+    get: function get() {
+      return m[k];
+    }
+  });
+} : function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  o[k2] = m[k];
+});
+
+var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (o, v) {
+  Object.defineProperty(o, "default", {
+    enumerable: true,
+    value: v
+  });
+} : function (o, v) {
+  o["default"] = v;
+});
+
+var __importStar = this && this.__importStar || function (mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) {
+    if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+  }
+
+  __setModuleDefault(result, mod);
+
+  return result;
+};
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var context_1 = __importDefault(__webpack_require__(/*! ./context */ "./resources/js/components/context.tsx"));
+
+var task_list_1 = __importStar(__webpack_require__(/*! ./task-list */ "./resources/js/components/task-list.tsx"));
+
+var task_status_card_1 = __webpack_require__(/*! ./task-status-card */ "./resources/js/components/task-status-card.tsx");
+
+function TaskBoradCard(data) {
+  var _a = (0, react_1.useContext)(context_1["default"]),
+      handClose = _a.handClose,
+      setFormData = _a.setFormData,
+      handleShowEditor = _a.handleShowEditor,
+      handleShowTask = _a.handleShowTask,
+      handleShowdelete = _a.handleShowdelete,
+      setSelectedCard = _a.setSelectedCard,
+      selectedCard = _a.selectedCard;
+
+  var taskPending = [];
+  var taskActive = [];
+  var taskDone = [];
+  data.tasks.map(function (task) {
+    switch (task.status) {
+      case task_status_card_1.TaskStatusType.PENDING:
+        taskPending.push(task);
+        break;
+
+      case task_status_card_1.TaskStatusType.ACTIVE:
+        taskActive.push(task);
+        break;
+
+      case task_status_card_1.TaskStatusType.DONE:
+        taskDone.push(task);
+        break;
+
+      default:
+        break;
+    }
+  });
+  return react_1["default"].createElement(context_1["default"].Provider, {
+    value: {
+      handClose: handClose,
+      setFormData: setFormData,
+      handleShowEditor: handleShowEditor,
+      handleShowTask: handleShowTask,
+      handleShowdelete: handleShowdelete,
+      setSelectedCard: setSelectedCard,
+      selectedCard: selectedCard
+    }
+  }, react_1["default"].createElement("ul", {
+    className: "grid xl:grid-cols-3 lg:grid-cols-2 gap-2"
+  }, react_1["default"].createElement("li", {
+    className: 'pending bg-gray-50'
+  }, react_1["default"].createElement(task_list_1.TaskTitile, {
+    text: 'Pendente',
+    total: taskPending.length
+  }), react_1["default"].createElement(task_list_1["default"], {
+    tasks: taskPending
+  })), react_1["default"].createElement("li", {
+    className: 'active bg-gray-50'
+  }, react_1["default"].createElement(task_list_1.TaskTitile, {
+    text: 'Activo',
+    total: taskActive.length
+  }), react_1["default"].createElement(task_list_1["default"], {
+    tasks: taskActive
+  })), react_1["default"].createElement("li", {
+    className: 'done bg-gray-50'
+  }, react_1["default"].createElement(task_list_1.TaskTitile, {
+    text: 'Feito',
+    total: taskDone.length
+  }), react_1["default"].createElement(task_list_1["default"], {
+    tasks: taskDone
+  }))));
+}
+
+exports["default"] = TaskBoradCard;
+
+/***/ }),
+
 /***/ "./resources/js/components/task-card-delete.tsx":
 /*!******************************************************!*\
   !*** ./resources/js/components/task-card-delete.tsx ***!
@@ -3637,6 +3769,111 @@ exports["default"] = TaskCard;
 
 /***/ }),
 
+/***/ "./resources/js/components/task-list.tsx":
+/*!***********************************************!*\
+  !*** ./resources/js/components/task-list.tsx ***!
+  \***********************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  Object.defineProperty(o, k2, {
+    enumerable: true,
+    get: function get() {
+      return m[k];
+    }
+  });
+} : function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  o[k2] = m[k];
+});
+
+var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (o, v) {
+  Object.defineProperty(o, "default", {
+    enumerable: true,
+    value: v
+  });
+} : function (o, v) {
+  o["default"] = v;
+});
+
+var __importStar = this && this.__importStar || function (mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) {
+    if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+  }
+
+  __setModuleDefault(result, mod);
+
+  return result;
+};
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.TaskTitile = void 0;
+
+var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var context_1 = __importDefault(__webpack_require__(/*! ./context */ "./resources/js/components/context.tsx"));
+
+var task_card_1 = __importDefault(__webpack_require__(/*! ./task-card */ "./resources/js/components/task-card.tsx"));
+
+function TaskList(data) {
+  var _a = (0, react_1.useContext)(context_1["default"]),
+      handClose = _a.handClose,
+      setFormData = _a.setFormData,
+      handleShowEditor = _a.handleShowEditor,
+      handleShowTask = _a.handleShowTask,
+      handleShowdelete = _a.handleShowdelete,
+      setSelectedCard = _a.setSelectedCard,
+      selectedCard = _a.selectedCard;
+
+  return react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("ul", {
+    className: ''
+  }, data.tasks.length > 0 && data.tasks.map(function (task) {
+    return react_1["default"].createElement("li", {
+      key: task.id,
+      className: 'inline-block p-3'
+    }, react_1["default"].createElement(context_1["default"].Provider, {
+      value: {
+        handClose: handClose,
+        setFormData: setFormData,
+        handleShowEditor: handleShowEditor,
+        handleShowTask: handleShowTask,
+        handleShowdelete: handleShowdelete,
+        setSelectedCard: setSelectedCard,
+        selectedCard: selectedCard
+      }
+    }, react_1["default"].createElement(task_card_1["default"], {
+      selected: selectedCard[task.id],
+      task: task
+    })));
+  })));
+}
+
+exports["default"] = TaskList;
+
+function TaskTitile(data) {
+  return react_1["default"].createElement("div", {
+    className: "p-2 font-semibold border-b pb-2"
+  }, data.text, " (", react_1["default"].createElement("small", null, data.total), ")");
+}
+
+exports.TaskTitile = TaskTitile;
+
+/***/ }),
+
 /***/ "./resources/js/components/task-status-card.tsx":
 /*!******************************************************!*\
   !*** ./resources/js/components/task-status-card.tsx ***!
@@ -4232,8 +4469,6 @@ var layout_1 = __importDefault(__webpack_require__(/*! ../../components/layout *
 
 var task_card_editor_1 = __importDefault(__webpack_require__(/*! ../../components/task-card-editor */ "./resources/js/components/task-card-editor.tsx"));
 
-var task_card_1 = __importDefault(__webpack_require__(/*! ../../components/task-card */ "./resources/js/components/task-card.tsx"));
-
 var http_client_1 = __webpack_require__(/*! ../../libs/http/http-client */ "./resources/js/libs/http/http-client.ts");
 
 var loading_1 = __importDefault(__webpack_require__(/*! ../loading */ "./resources/js/pages/loading/index.tsx"));
@@ -4250,6 +4485,8 @@ var task_card_detail_1 = __importDefault(__webpack_require__(/*! ../../component
 
 var notification_1 = __importStar(__webpack_require__(/*! ../../components/notification */ "./resources/js/components/notification.tsx"));
 
+var task_board_card_1 = __importDefault(__webpack_require__(/*! ../../components/task-board-card */ "./resources/js/components/task-board-card.tsx"));
+
 function Tasks() {
   var _this = this;
 
@@ -4258,41 +4495,45 @@ function Tasks() {
       setTaks = _a[1];
 
   var _b = (0, react_1.useState)(true),
-      loading = _b[0],
-      setLoading = _b[1];
+      loadingData = _b[0],
+      setLoadingData = _b[1];
 
   var _c = (0, react_1.useState)(false),
-      showModal = _c[0],
-      setShowModal = _c[1];
+      showLoader = _c[0],
+      setShowLoader = _c[1];
 
   var _d = (0, react_1.useState)(false),
-      showModalDelete = _d[0],
-      setShowModalDelete = _d[1];
+      showModal = _d[0],
+      setShowModal = _d[1];
 
   var _e = (0, react_1.useState)(false),
-      showModalDetail = _e[0],
-      setShowModalDetail = _e[1];
+      showModalDelete = _e[0],
+      setShowModalDelete = _e[1];
 
-  var _f = (0, react_1.useState)({}),
-      formData = _f[0],
-      setFormData = _f[1];
+  var _f = (0, react_1.useState)(false),
+      showModalDetail = _f[0],
+      setShowModalDetail = _f[1];
 
-  var _g = (0, react_1.useState)([0, false]),
-      selectedCard = _g[0],
-      setSelectedCard = _g[1];
+  var _g = (0, react_1.useState)({}),
+      formData = _g[0],
+      setFormData = _g[1];
 
-  var _h = (0, react_1.useState)(false),
-      softDelete = _h[0],
-      setSoftDelete = _h[1];
+  var _h = (0, react_1.useState)([0, false]),
+      selectedCard = _h[0],
+      setSelectedCard = _h[1];
 
-  var _j = (0, react_1.useState)({
+  var _j = (0, react_1.useState)(false),
+      softDelete = _j[0],
+      setSoftDelete = _j[1];
+
+  var _k = (0, react_1.useState)({
     result: false,
     message: '',
     type: '',
     show: false
   }),
-      notify = _j[0],
-      setNotify = _j[1];
+      notify = _k[0],
+      setNotify = _k[1];
 
   (0, react_1.useEffect)(function () {
     loadData();
@@ -4315,7 +4556,7 @@ function Tasks() {
     http_client_1.HttpClient.get({
       uri: '/tasks',
       callback: function callback(response) {
-        setLoading(false);
+        setLoadingData(false);
         setTaks(response.data);
       }
     });
@@ -4416,7 +4657,7 @@ function Tasks() {
     });
   };
 
-  if (loading) {
+  if (loadingData) {
     return react_1["default"].createElement(loading_1["default"], null);
   }
 
@@ -4440,7 +4681,9 @@ function Tasks() {
       handClose: handClose,
       handleSubmit: handleSubmit,
       setFormData: setFormData,
-      formData: formData
+      formData: formData,
+      setShowLoader: setShowLoader,
+      showLoader: showLoader
     }
   }, react_1["default"].createElement(task_card_editor_1["default"], {
     show: showModal,
@@ -4450,7 +4693,9 @@ function Tasks() {
       handClose: handClose,
       handleSubmitDelete: handleSubmitDelete,
       setSoftDelete: setSoftDelete,
-      softDelete: softDelete
+      softDelete: softDelete,
+      setShowLoader: setShowLoader,
+      showLoader: showLoader
     }
   }, showModalDelete && react_1["default"].createElement(task_card_delete_1.TaskCardDelete, {
     show: showModalDelete,
@@ -4466,26 +4711,18 @@ function Tasks() {
     className: "flex items-center gap-x-2 bg-blue-50 border border-blue-100 px-7 py-4 text-center"
   }, react_1["default"].createElement(bs_1.BsInfoCircle, null), "Nenhuma tarefa de momento. Comece a criar uma.") : react_1["default"].createElement("div", {
     className: ""
-  }, react_1["default"].createElement("ul", {
-    className: 'grid grid-cols-3 gap-4'
-  }, tasks.map(function (task) {
-    return react_1["default"].createElement("li", {
-      key: task.id,
-      className: ''
-    }, react_1["default"].createElement(context_1["default"].Provider, {
-      value: {
-        handClose: handClose,
-        setFormData: setFormData,
-        handleShowEditor: handleShowEditor,
-        handleShowTask: handleShowTask,
-        handleShowdelete: handleShowdelete,
-        setSelectedCard: setSelectedCard,
-        selectedCard: selectedCard
-      }
-    }, react_1["default"].createElement(task_card_1["default"], {
-      selected: selectedCard[task.id],
-      task: task
-    })));
+  }, react_1["default"].createElement(context_1["default"].Provider, {
+    value: {
+      handClose: handClose,
+      setFormData: setFormData,
+      handleShowEditor: handleShowEditor,
+      handleShowTask: handleShowTask,
+      handleShowdelete: handleShowdelete,
+      setSelectedCard: setSelectedCard,
+      selectedCard: selectedCard
+    }
+  }, react_1["default"].createElement(task_board_card_1["default"], {
+    tasks: tasks
   })))));
 }
 

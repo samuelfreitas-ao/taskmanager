@@ -13,10 +13,12 @@ import { TaskController } from '../../app/controllers/TaskController';
 import { TaskCardDelete } from '../../components/task-card-delete';
 import TaskCardDetail from '../../components/task-card-detail';
 import Notification, { NotificationHandle, NotificationType } from '../../components/notification';
+import TaskBoardCard from '../../components/task-board-card';
 
 export default function Tasks() {
     const [tasks, setTaks] = useState<ITask[]>([]);
-    const [loading, setLoading] = useState<boolean>(true)
+    const [loadingData, setLoadingData] = useState<boolean>(true)
+    const [showLoader, setShowLoader] = useState<boolean>(false)
     const [showModal, setShowModal] = useState<boolean>(false)
     const [showModalDelete, setShowModalDelete] = useState<boolean>(false)
     const [showModalDetail, setShowModalDetail] = useState<boolean>(false)
@@ -46,7 +48,7 @@ export default function Tasks() {
         HttpClient.get({
             uri: '/tasks',
             callback: (response: any) => {
-                setLoading(false)
+                setLoadingData(false)
                 setTaks(response.data)
             }
         })
@@ -93,7 +95,7 @@ export default function Tasks() {
         }
     }
 
-    if (loading) {
+    if (loadingData) {
         return <LoadingPage />
     }
     return (
@@ -109,11 +111,11 @@ export default function Tasks() {
                         Nova tarefa
                     </ButtonBlue>
                 </div>
-                <Context.Provider value={{ handClose, handleSubmit, setFormData, formData }}>
+                <Context.Provider value={{ handClose, handleSubmit, setFormData, formData, setShowLoader, showLoader }}>
                     <TaskCardEditor show={showModal} task={formData} />
                 </Context.Provider>
 
-                <Context.Provider value={{ handClose, handleSubmitDelete, setSoftDelete, softDelete }}>
+                <Context.Provider value={{ handClose, handleSubmitDelete, setSoftDelete, softDelete, setShowLoader, showLoader }}>
                     {showModalDelete &&
                         <TaskCardDelete show={showModalDelete} task={formData} />
                     }
@@ -131,15 +133,9 @@ export default function Tasks() {
                     </div>
                     :
                     <div className="">
-                        <ul className='grid grid-cols-3 gap-4'>
-                            {tasks.map((task) => (
-                                <li key={task.id} className=''>
-                                    <Context.Provider value={{ handClose, setFormData, handleShowEditor, handleShowTask, handleShowdelete, setSelectedCard, selectedCard }}>
-                                        <TaskCard selected={selectedCard[task.id]} task={task} />
-                                    </Context.Provider>
-                                </li>
-                            ))}
-                        </ul>
+                        <Context.Provider value={{ handClose, setFormData, handleShowEditor, handleShowTask, handleShowdelete, setSelectedCard, selectedCard }}>
+                            <TaskBoardCard tasks={tasks} />
+                        </Context.Provider>
                     </div>
                 }
             </div>
