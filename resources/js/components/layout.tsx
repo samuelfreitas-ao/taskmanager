@@ -1,4 +1,6 @@
 import React from 'react';
+import { BsClipboard, BsClipboardCheck, BsClipboardData, BsClipboardMinus, BsClipboardPlus, BsClipboardX } from 'react-icons/bs';
+import { FiList } from 'react-icons/fi';
 type PropsMain = React.PropsWithChildren<{ title?: string }>
 export default function Layout({ children, title }: PropsMain) {
     return (
@@ -9,8 +11,8 @@ export default function Layout({ children, title }: PropsMain) {
                         {/* whiteContainer */}
                         <div className="flex flex-col w-full xl:w-4/5 h-full px-4 py-4 rounded-lg bg-white overflow-y-auto shadow p-5">
                             {/* Title */}
-                            <div className="text-5xl text-center border-b pb-4 mb-4">
-                                Task Manager
+                            <div className="flex gap-2 items-center justify-center text-5xl text-center border-b pb-4 mb-4">
+                                <BsClipboardCheck className='' /> Task Manager
                             </div>
                             {/* Content */}
                             {children}

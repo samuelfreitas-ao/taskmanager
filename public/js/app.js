@@ -2703,6 +2703,8 @@ Object.defineProperty(exports, "__esModule", ({
 
 var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 
+var bs_1 = __webpack_require__(/*! react-icons/bs */ "./node_modules/react-icons/bs/index.esm.js");
+
 function Layout(_a) {
   var children = _a.children,
       title = _a.title;
@@ -2717,8 +2719,10 @@ function Layout(_a) {
   }, " ", react_1["default"].createElement("div", {
     className: "flex flex-col w-full xl:w-4/5 h-full px-4 py-4 rounded-lg bg-white overflow-y-auto shadow p-5"
   }, react_1["default"].createElement("div", {
-    className: "text-5xl text-center border-b pb-4 mb-4"
-  }, "Task Manager"), children)))));
+    className: "flex gap-2 items-center justify-center text-5xl text-center border-b pb-4 mb-4"
+  }, react_1["default"].createElement(bs_1.BsClipboardCheck, {
+    className: ''
+  }), " Task Manager"), children)))));
 }
 
 exports["default"] = Layout;
@@ -3747,12 +3751,12 @@ function TaskCard(data) {
     className: "font-semibold mb-2"
   }, react_1["default"].createElement("button", {
     onClick: handleDetail,
-    className: 'hover:underline'
-  }, react_1["default"].createElement("span", {
+    className: 'hover:underline flex gap-1 items-center'
+  }, react_1["default"].createElement(bs_1.BsClipboardData, null), " ", react_1["default"].createElement("span", {
     className: "font-bold"
   }, task.id), " ", task.title)), react_1["default"].createElement("div", {
     className: "flex items-center gap-2"
-  }, "Ficheiros", react_1["default"].createElement("div", {
+  }, "Anexos", react_1["default"].createElement("div", {
     className: ""
   }, task.files.length)), react_1["default"].createElement(task_status_card_1["default"], {
     status: task.status
