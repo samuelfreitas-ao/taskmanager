@@ -15,7 +15,9 @@ class TaskService
     $data = new TaskType(title: $request->title, description: $request->description, status: $request->status);
     $task = Task::create($data->toArray());
 
-    (new FileService)->store((new Request())->merge(['file' => $request->file, 'task_id' => $task->id]));
+    if ($request->file) {
+      (new FileService)->store((new Request())->merge(['file' => $request->file, 'task_id' => $task->id]));
+    }
 
     return $task;
   }
@@ -29,5 +31,22 @@ class TaskService
     $task->update($data->toArray());
 
     return $task;
+  }
+
+  public function destroy(int $id, bool $softDelete = false): bool
+  {
+    if (!$task = Task::find($id)) {
+      return false;
+    };
+    if ($softDelete) {
+      $task->delete();
+    } else {
+      if ($filePaths = $task->files->pluck('path')->toarray()) {
+        (new FileService)->deleteFiles($filePaths);
+      }
+      $task->forceDelete();
+    }
+
+    return true;
   }
 }

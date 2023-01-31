@@ -60,35 +60,19 @@ class TaskController extends Controller
     }
   }
 
-  public function destroy(int $id): JsonResponse
+  public function destroy(TaskService $service, int $id): JsonResponse
   {
-    $feedback = ['result' => false, 'message' => '', 'data' => null];
+    try {
+      $softDelete = in_array(request()->query('soft'), [true, 'true', 1, '1']);
 
-    $task = Task::find($id);
-    $softDelete = request()->query('soft');
-    // $softDelete = $softDelete || $softDelete == 'true' || $softDelete == '1';
-    if (!$task) {
-      $feedback['message'] = 'Tarefa não encontrada.';
-    } else {
-      try {
-        $files = $task->files;
-        if ($softDelete) {
-          $task->delete();
-        } else {
-          $task->forceDelete();
-          if ($files) {
-            foreach ($files as $f) {
-              FileController::removeUpload($f);
-            }
-          }
-        }
+      $taskDeleted = $service->destroy(id: $id, softDelete: $softDelete);
 
-        $feedback['result'] = true;
-        $feedback['message'] = 'Tarefa excluída com sucesso.';
-      } catch (\Throwable $th) {
-        $feedback['message'] = 'Houve um erro ao excluir tarefa. Tente novamente ou contacte o administrador do sistema.' . $th;
+      if (!$taskDeleted) {
+        return MessageHelper::errorJson(message: 'Tarefa não encontrada.');
       }
+      return MessageHelper::successJson(message: 'Tarefa excluída com sucesso.');
+    } catch (\Throwable $th) {
+      return MessageHelper::errorJson(message: 'Erro ao excluir tarefa. Tente novamente.');
     }
-    return response()->json($feedback);
   }
 }
