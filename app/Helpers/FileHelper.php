@@ -2,8 +2,7 @@
 
 namespace App\Helpers;
 
-use App\Models\File;
-use App\Types\FileType;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use illuminate\Support\Str;
 
@@ -18,20 +17,17 @@ class FileHelper
     TYPE_IMAGE = 'image',
     TYPE_VIDEO = 'video';
 
-  public static function upload(FileType $data)
+  public static function upload(UploadedFile | array $file): string | array
   {
-    $feeback = ['result' => false, 'message' => '', 'data' => null];
-    $file = $data->file;
-    $task_id = $data->task_id;
-
     if (is_array($file)) {
+      $path = [];
       foreach ($file as $f) {
-        $feeback = self::_uploadAndSave($f, $task_id)->getData();
+        array_push($path, self::_upload($f));
       }
     } else {
-      $feeback = self::_uploadAndSave($file, $task_id)->getData();
+      $path = self::_upload($file);
     }
-    return response()->json($feeback);
+    return $path;
   }
 
   public static function removeUpload(string | array $file)
@@ -45,27 +41,13 @@ class FileHelper
     }
   }
 
-  private static function _uploadAndSave($file, $task_id): object
+  private static function _upload(UploadedFile $file): string
   {
-    $feeback = ['result' => false, 'message' => '', 'data' => null];
     $fileOriginalName =  $file->getClientOriginalName();
     $fileName = self::changeNameIfExists($fileOriginalName);
     $type = self::getType($fileOriginalName);
     $path = $file->storeAs($type, $fileName);
-
-    $_file = new File();
-    $_file->path = $path;
-    $_file->type = $type;
-    $_file->task_id = $task_id;
-    try {
-      $_file->save();
-      $feeback['result'] = true;
-      $feeback['message'] = 'Ficheiro inserido com sucesso.';
-      $feeback['data'] = $_file;
-    } catch (\Throwable $th) {
-      $feeback['message'] = 'Houve um erro ao salvar ficheiro.';
-    }
-    return response()->json($feeback);
+    return $path;
   }
 
   public static function changeNameIfExists($file): string
