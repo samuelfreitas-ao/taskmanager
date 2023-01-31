@@ -18,32 +18,6 @@ class FileHelper
     TYPE_IMAGE = 'image',
     TYPE_VIDEO = 'video';
 
-  /**
-   * Remove the specified resource from storage.
-   *
-   * @param  \App\Models\File  $file
-   * @return \Illuminate\Http\Response
-   */
-  public function destroy($id)
-  {
-    $feedback = ["result" => false, "message" => "", "data" => null];
-    $file = File::find($id);
-    if (!$file) {
-      $feedback["message"] = "O ficheiro que tentou excluir não existe.";
-    } else {
-      $fileName = $file->path;
-      try {
-        $file->delete();
-        self::removeUpload($fileName);
-        $feedback["result"] = true;
-        $feedback["message"] = "Ficheiro {$fileName} excluído com sucesso.";
-      } catch (\Exception $ex) {
-        $feedback["message"] = "Erro ao excluir o ficheiro {$fileName}";
-      }
-    }
-    return response()->json($feedback);
-  }
-
   public static function upload(FileType $data)
   {
     $feeback = ['result' => false, 'message' => '', 'data' => null];
@@ -71,13 +45,6 @@ class FileHelper
     }
   }
 
-  /**
-   * Upload e store data file in database
-   *
-   * @param mix $file array | object
-   * @param int $task_id
-   * @return object Return an uploaded file path
-   */
   private static function _uploadAndSave($file, $task_id): object
   {
     $feeback = ['result' => false, 'message' => '', 'data' => null];
@@ -101,12 +68,6 @@ class FileHelper
     return response()->json($feeback);
   }
 
-  /**
-   * Change a file name if it already exists in some folder
-   *
-   * @param string $file
-   * @return string Return a unique file name in a folder
-   */
   public static function changeNameIfExists($file): string
   {
     $path = Storage::path('');
@@ -126,12 +87,6 @@ class FileHelper
     return $file;
   }
 
-  /**
-   * Extract a file extension
-   *
-   * @param string $file
-   * @return string Return file extension
-   */
   public static function getExtension(string $file): string
   {
     $explode =  explode('.', $file);
@@ -142,12 +97,6 @@ class FileHelper
     return null;
   }
 
-  /**
-   * Extract a file name without extension
-   *
-   * @param string $file
-   * @return string Return file name without extension
-   */
   public static function getNameOnly(string $file): string
   {
     $file = basename($file);
@@ -159,13 +108,6 @@ class FileHelper
     return null;
   }
 
-
-  /**
-   * Get a file type, such as: image | audio | video | archive
-   *
-   * @param string $file
-   * @return string Return a file type
-   */
   public static function getType(string $file): string
   {
     $extension = self::getExtension($file);
