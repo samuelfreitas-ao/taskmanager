@@ -6,7 +6,8 @@ use App\Http\Requests\TaskCreateRequest;
 use App\Http\Requests\TaskUpdateRequest;
 use App\Http\Resources\TaskResource;
 use App\Models\Task;
-use Illuminate\Http\Request;
+use App\Services\TaskService;
+use Illuminate\Http\JsonResponse;
 use stdClass;
 
 class TaskController extends Controller
@@ -23,29 +24,11 @@ class TaskController extends Controller
     return TaskResource::collection($tasks);
   }
 
-  /**
-   * Store a newly created resource in storage.
-   *
-   * @param  \Illuminate\Http\Request  $request
-   * @return \Illuminate\Http\Response
-   */
-  public function store(TaskCreateRequest $request)
+  public function store(TaskCreateRequest $request, TaskService $service): JsonResponse
   {
     $feedback = ['result' => false, 'message' => '', 'data' => null];
-    $file = $request->file('file');
     try {
-      $task = new Task();
-      $task->title = $request->title;
-      $task->description = $request->description;
-      $task->status = $request->status;
-      $task->save();
-
-      if ($file) {
-        $data = new stdClass();
-        $data->file = $file;
-        $data->task_id = $task->id;
-        FileController::upload($data);
-      }
+      $task = $service->store($request);
 
       $task->load('files');
 
@@ -53,7 +36,7 @@ class TaskController extends Controller
       $feedback['message'] = 'Tarefa cadastrada com sucesso.';
       $feedback['data'] = new TaskResource($task);
     } catch (\Throwable $th) {
-      $feedback['message'] = 'Houve um erro ao cadastrar tarefa. Tente novamente ou contacte o administrador do sistema.';
+      $feedback['message'] = 'Houve um erro ao cadastrar tarefa. Tente novamente.' . $th->getMessage();
     }
     return response()->json($feedback);
   }
