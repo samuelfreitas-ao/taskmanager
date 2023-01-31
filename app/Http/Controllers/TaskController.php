@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TaskCreateRequest;
+use App\Http\Requests\TaskUpdateRequest;
 use App\Http\Resources\TaskResource;
 use App\Models\Task;
 use Illuminate\Http\Request;
@@ -27,46 +29,31 @@ class TaskController extends Controller
    * @param  \Illuminate\Http\Request  $request
    * @return \Illuminate\Http\Response
    */
-  public function store(Request $request)
+  public function store(TaskCreateRequest $request)
   {
     $feedback = ['result' => false, 'message' => '', 'data' => null];
-
-    $title = trim($request->title);
-    $description = trim($request->description);
-    $status = trim($request->status);
     $file = $request->file('file');
-    if (!$title) {
-      $feedback['message'] = 'Informe o título da tarefa.';
-    } else if (!$description) {
-      $feedback['message'] = 'Adicione uma descrição na tarefa.';
-    } else if (!$status) {
-      $feedback['message'] = 'Selecione o estado da tarefa.';
-    } else if (Task::where('title', $title)->count() > 0) {
-      $feedback['message'] = 'Já tem uma tarefa com este título.';
-    } else {
-      try {
-        $task = new Task();
-        $task->title = $title;
-        $task->description = $description;
-        $task->status = $status;
-        $task->save();
+    try {
+      $task = new Task();
+      $task->title = $request->title;
+      $task->description = $request->description;
+      $task->status = $request->status;
+      $task->save();
 
-        if ($file) {
-          //Uplaod and store a file in database
-          $data = new stdClass();
-          $data->file = $file;
-          $data->task_id = $task->id;
-          FileController::upload($data);
-        }
-
-        $task->load('files');
-
-        $feedback['result'] = true;
-        $feedback['message'] = 'Tarefa cadastrada com sucesso.';
-        $feedback['data'] = new TaskResource($task);
-      } catch (\Throwable $th) {
-        $feedback['message'] = 'Houve um erro ao cadastrar tarefa. Tente novamente ou contacte o administrador do sistema.';
+      if ($file) {
+        $data = new stdClass();
+        $data->file = $file;
+        $data->task_id = $task->id;
+        FileController::upload($data);
       }
+
+      $task->load('files');
+
+      $feedback['result'] = true;
+      $feedback['message'] = 'Tarefa cadastrada com sucesso.';
+      $feedback['data'] = new TaskResource($task);
+    } catch (\Throwable $th) {
+      $feedback['message'] = 'Houve um erro ao cadastrar tarefa. Tente novamente ou contacte o administrador do sistema.';
     }
     return response()->json($feedback);
   }
@@ -97,33 +84,21 @@ class TaskController extends Controller
    * @param  int  $id
    * @return \Illuminate\Http\Response
    */
-  public function update(Request $request, $id)
+  public function update(TaskUpdateRequest $request, $id)
   {
     $feedback = ['result' => false, 'message' => '', 'data' => null];
 
-    $title = trim($request->title);
-    $description = trim($request->description);
-    $status = trim($request->status);
     $file = $request->file;
-    if (!$title) {
-      $feedback['message'] = 'Informe o título da tarefa.';
-    } else if (!$description) {
-      $feedback['message'] = 'Adicione uma descrição na tarefa.';
-    } else if (!$status) {
-      $feedback['message'] = 'Selecione o estado da tarefa.';
-    } else if (!$task = Task::find($id)) {
+    if (!$task = Task::find($id)) {
       $feedback['message'] = 'Tarefa não encontrada.';
-    } else if (Task::where('title', $title)->where('id', '<>', $id)->count() > 0) {
-      $feedback['message'] = 'Já tem uma tarefa com este título.';
     } else {
       try {
-        $task->title = $title;
-        $task->description = $description;
-        $task->status = $status;
+        $task->title = $request->title;
+        $task->description = $request->description;
+        $task->status = $request->status;
         $task->save();
 
         if ($file) {
-          //Uplaod and store a file in database
           $data = new stdClass();
           $data->file = $file;
           $data->task_id = $task->id;
