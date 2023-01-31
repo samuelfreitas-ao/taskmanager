@@ -8,11 +8,17 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Task extends Model
 {
-    use HasFactory;
-    use SoftDeletes;
+  use HasFactory;
+  use SoftDeletes;
 
-    public function files()
-    {
-        return $this->hasMany(File::class);
-    }
+  protected $fillable = [
+    'title',
+    'description',
+    'status',
+  ];
+
+  public function files()
+  {
+    return $this->hasMany(File::class);
+  }
 }
