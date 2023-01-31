@@ -26,19 +26,22 @@ class TaskController extends Controller
 
   public function store(TaskCreateRequest $request, TaskService $service): JsonResponse
   {
-    $feedback = ['result' => false, 'message' => '', 'data' => null];
     try {
       $task = $service->store($request);
-
       $task->load('files');
 
-      $feedback['result'] = true;
-      $feedback['message'] = 'Tarefa cadastrada com sucesso.';
-      $feedback['data'] = new TaskResource($task);
+      return response()->json([
+        'result' => true,
+        'message' => 'Tarefa cadastrada com sucesso.',
+        'data' => new TaskResource($task)
+      ]);
     } catch (\Throwable $th) {
-      $feedback['message'] = 'Houve um erro ao cadastrar tarefa. Tente novamente.' . $th->getMessage();
+      return response()->json([
+        'result' => false,
+        'message' => 'Erro ao cadastrar tarefa.',
+        'data' => null
+      ]);
     }
-    return response()->json($feedback);
   }
 
   /**
@@ -55,7 +58,11 @@ class TaskController extends Controller
       $task->load('files');
       $feedback = new TaskResource($task);
     } else {
-      $feedback = response()->json(['result' => false, 'message' => 'Tarefa não encontrada.', 'data' => null]);
+      $feedback = response()->json([
+        'result' => false,
+        'message' => 'Tarefa não encontrada.',
+        'data' => null
+      ]);
     }
     return $feedback;
   }
