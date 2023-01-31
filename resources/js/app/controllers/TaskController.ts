@@ -2,6 +2,8 @@ import { HttpClient } from "../../libs/http/http-client";
 import { IPostResponse } from "../types/http";
 import { ITask } from "../types/task";
 
+const url = (path?: string) => `/tasks${path ?? ""}`;
+
 export class TaskController {
     /**
      * Store a record on database
@@ -10,13 +12,15 @@ export class TaskController {
      * @returns IPostResponse
      */
     static async create(task: ITask): Promise<IPostResponse> {
-        let feedback = this.validate(task)
+        let feedback = this.validate(task);
         if (feedback.result) {
-            const data = this.preparedformData(task)
-            const response = await HttpClient.post({ uri: `/tasks/create`, data })
-            feedback = response.data
+            const data = this.preparedformData(task);
+            feedback = await HttpClient.post({
+                uri: url(),
+                data,
+            });
         }
-        return feedback
+        return feedback;
     }
 
     /**
@@ -26,15 +30,16 @@ export class TaskController {
      * @returns IPostResponse
      */
     static async update(task: ITask): Promise<IPostResponse> {
-        let feedback = this.validate(task)
+        let feedback = this.validate(task);
         if (!task.id || task.id < 1) {
-            feedback.message = 'Tarefa não encontrada.'
+            feedback.message = "Tarefa não encontrada.";
         } else if (feedback.result) {
-            const data = this.preparedformData(task)
-            const response = await HttpClient.post({ uri: `/tasks/${task.id}/update`, data })
-            feedback = response.data
+            feedback = await HttpClient.update({
+                uri: url(`/${task.id}`),
+                data: task,
+            });
         }
-        return feedback
+        return feedback;
     }
 
     /**
@@ -44,45 +49,49 @@ export class TaskController {
      * @param soft option to specify if delete soft or permantemently on db table
      * @returns IPostResponse
      */
-    static async delete(id: number, soft: boolean = false): Promise<IPostResponse> {
-        let feedback = { result: false, message: '', data: null }
+    static async delete(
+        id: number,
+        soft: boolean = false
+    ): Promise<IPostResponse> {
+        let feedback = { result: false, message: "", data: null };
         if (!id || id < 1) {
-            feedback.message = 'Tarefa não encontrada.'
+            feedback.message = "Tarefa não encontrada.";
         } else {
-            const response = await HttpClient.post({ uri: `/tasks/${id}/delete${soft ? '?soft=true' : ''}` })
-            feedback = response.data
+            feedback = await HttpClient.delete({
+                uri: url(`/${id}${soft ? "?soft=true" : ""}`),
+            });
         }
-        return feedback
+        return feedback;
     }
 
     private static validate(task: ITask) {
-        let feedback = { result: false, message: '', data: null }
+        let feedback = { result: false, message: "", data: null };
         if (!task.title || !task.title.trim()) {
-            feedback.message = 'Informe o título da tarefa.'
+            feedback.message = "Informe o título da tarefa.";
         } else if (!task.description || !task.description.trim()) {
-            feedback.message = 'Informe a descrição da tarefa.'
+            feedback.message = "Informe a descrição da tarefa.";
         } else if (!task.status || !task.status.trim()) {
-            feedback.message = 'Informe o estado da tarefa.'
+            feedback.message = "Informe o estado da tarefa.";
         } else {
-            feedback.result = true
+            feedback.result = true;
         }
-        return feedback
+        return feedback;
     }
 
     private static preparedformData(data: object): FormData {
         const dataValues = Object.values(data);
-        const formData = new FormData()
+        const formData = new FormData();
         Object.keys(data).forEach(function (key, i) {
-            const value = dataValues[i]
-            if (key == 'file') {
-                const files = value
+            const value = dataValues[i];
+            if (key == "file") {
+                const files = value;
                 for (let i = 0; i < files.length; i++) {
-                    formData.append('file[' + i + ']', files[i])
+                    formData.append("file[" + i + "]", files[i]);
                 }
-            } else if (key != 'id') {
+            } else if (key != "id") {
                 formData.append(key, value);
             }
-        })
-        return formData
+        });
+        return formData;
     }
 }
