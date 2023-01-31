@@ -18,6 +18,7 @@ export default function Layout ({ children, title }: PropsMain) {
               {/* Content */}
               {children}
             </div>
+            <footer>Desenvolvido por <a href="//github.com/samuelfreitas-ao" className='text-blue-500 underline' target='_blank'>Samuel Freitas</a></footer>
           </div>
         </div>
       </div>
