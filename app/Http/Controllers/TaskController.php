@@ -41,7 +41,7 @@ class TaskController extends Controller
     }
   }
 
-  public function show($id): JsonResource | JsonResponse
+  public function show(int $id): JsonResource | JsonResponse
   {
     $task = Task::find($id);
     if ($task) {
@@ -56,7 +56,7 @@ class TaskController extends Controller
     }
   }
 
-  public function update(TaskUpdateRequest $request, $id)
+  public function update(TaskUpdateRequest $request, int $id)
   {
     $feedback = ['result' => false, 'message' => '', 'data' => null];
 
@@ -89,7 +89,7 @@ class TaskController extends Controller
     return response()->json($feedback);
   }
 
-  public function destroy($id): JsonResponse
+  public function destroy(int $id): JsonResponse
   {
     $feedback = ['result' => false, 'message' => '', 'data' => null];
 
