@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\MessageHelper;
 use App\Http\Requests\TaskCreateRequest;
 use App\Http\Requests\TaskUpdateRequest;
 use App\Http\Resources\TaskResource;
@@ -26,18 +27,12 @@ class TaskController extends Controller
     try {
       $task = $service->store($request);
       $task->load('files');
-
-      return response()->json([
-        'result' => true,
-        'message' => 'Tarefa cadastrada com sucesso.',
-        'data' => new TaskResource($task)
-      ]);
+      return MessageHelper::successJson(
+        message: 'Tarefa cadastrada com sucesso.',
+        data: new TaskResource($task)
+      );
     } catch (\Throwable $th) {
-      return response()->json([
-        'result' => false,
-        'message' => 'Erro ao cadastrar tarefa.',
-        'data' => null
-      ]);
+      return MessageHelper::errorJson(message: 'Erro ao cadastrar tarefa.');
     }
   }
 
@@ -48,11 +43,7 @@ class TaskController extends Controller
       $task->load('files');
       return new TaskResource($task);
     } else {
-      return response()->json([
-        'result' => false,
-        'message' => 'Tarefa não encontrada.',
-        'data' => null
-      ]);
+      return MessageHelper::errorJson(message: 'Tarefa não encontrada.');
     }
   }
 
