@@ -60,18 +60,12 @@ class FileHelper
     return response()->json($feeback);
   }
 
-  public static function removeUpload(File | array $file)
+  public static function removeUpload(string | array $file)
   {
     if (is_array($file)) {
       foreach ($file as  $f) {
-        if (is_object($f)) {
-          Storage::delete($f->path);
-        } else {
-          Storage::delete($f);
-        }
+        Storage::delete($f);
       }
-    } else if (is_object($file)) {
-      Storage::delete($file->path);
     } else {
       Storage::delete($file);
     }
