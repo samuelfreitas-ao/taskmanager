@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Helpers\MessageHelper;
 use App\Models\Task;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
@@ -43,11 +44,7 @@ class TaskCreateRequest extends FormRequest
   {
     throw new ValidationException(
       $validator,
-      response()->json([
-        'result' => false,
-        'message' => $validator->errors()->first(),
-        'data' => null
-      ])
+      MessageHelper::errorJson(message: $validator->errors()->first())
     );
   }
 }
