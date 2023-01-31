@@ -8,11 +8,13 @@ use App\Http\Resources\TaskResource;
 use App\Models\Task;
 use App\Services\TaskService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Resources\Json\JsonResource;
 use stdClass;
 
 class TaskController extends Controller
 {
-  public function index()
+  public function index(): AnonymousResourceCollection
   {
     $tasks = Task::orderby('id', 'desc')->get();
     $tasks->load('files');
@@ -39,21 +41,19 @@ class TaskController extends Controller
     }
   }
 
-  public function show($id)
+  public function show($id): JsonResource | JsonResponse
   {
-    $feedback = null;
     $task = Task::find($id);
     if ($task) {
       $task->load('files');
-      $feedback = new TaskResource($task);
+      return new TaskResource($task);
     } else {
-      $feedback = response()->json([
+      return response()->json([
         'result' => false,
         'message' => 'Tarefa não encontrada.',
         'data' => null
       ]);
     }
-    return $feedback;
   }
 
   public function update(TaskUpdateRequest $request, $id)
@@ -89,7 +89,7 @@ class TaskController extends Controller
     return response()->json($feedback);
   }
 
-  public function destroy($id)
+  public function destroy($id): JsonResponse
   {
     $feedback = ['result' => false, 'message' => '', 'data' => null];
 
