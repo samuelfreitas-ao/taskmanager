@@ -11,7 +11,6 @@ use App\Services\TaskService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
-use stdClass;
 
 class TaskController extends Controller
 {
@@ -27,12 +26,10 @@ class TaskController extends Controller
     try {
       $task = $service->store($request);
       $task->load('files');
-      return MessageHelper::successJson(
-        message: 'Tarefa cadastrada com sucesso.',
-        data: new TaskResource($task)
-      );
+
+      return MessageHelper::successJson(message: 'Tarefa cadastrada com sucesso.', data: new TaskResource($task));
     } catch (\Throwable $th) {
-      return MessageHelper::errorJson(message: 'Erro ao cadastrar tarefa.');
+      return MessageHelper::errorJson(message: 'Erro ao cadastrar tarefa. Tente novamente.');
     }
   }
 
@@ -41,43 +38,26 @@ class TaskController extends Controller
     $task = Task::find($id);
     if ($task) {
       $task->load('files');
+
       return new TaskResource($task);
     } else {
       return MessageHelper::errorJson(message: 'Tarefa não encontrada.');
     }
   }
 
-  public function update(TaskUpdateRequest $request, int $id)
+  public function update(TaskUpdateRequest $request, TaskService $service, int $id): JsonResponse
   {
-    $feedback = ['result' => false, 'message' => '', 'data' => null];
-
-    $file = $request->file;
-    if (!$task = Task::find($id)) {
-      $feedback['message'] = 'Tarefa não encontrada.';
-    } else {
-      try {
-        $task->title = $request->title;
-        $task->description = $request->description;
-        $task->status = $request->status;
-        $task->save();
-
-        if ($file) {
-          $data = new stdClass();
-          $data->file = $file;
-          $data->task_id = $task->id;
-          FileController::upload($data);
-        }
-
-        $task->load('files');
-
-        $feedback['result'] = true;
-        $feedback['message'] = 'Tarefa actualizada com sucesso.';
-        $feedback['data'] = new TaskResource($task);
-      } catch (\Throwable $th) {
-        $feedback['message'] = 'Houve um erro ao actualizar tarefa. Tente novamente ou contacte o administrador do sistema.';
+    try {
+      $task = $service->update($request, $id);
+      if (!$task) {
+        return MessageHelper::errorJson(message: 'Tarefa não encontrada.');
       }
+      $task->load('files');
+
+      return MessageHelper::successJson(message: 'Tarefa actualizada com sucesso.', data: new TaskResource($task));
+    } catch (\Throwable $th) {
+      return MessageHelper::errorJson(message: 'Houve um erro ao actualizar tarefa. Tente novamente.');
     }
-    return response()->json($feedback);
   }
 
   public function destroy(int $id): JsonResponse
