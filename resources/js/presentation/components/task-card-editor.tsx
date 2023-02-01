@@ -1,27 +1,27 @@
-import React, { ChangeEvent, FormEvent, useContext, useState } from 'react';
-import { ITask } from '../app/types/task';
-import { Modal } from './modal';
-import Context from './context'
-import { ButtonBlue, ButtonGray, ButtonGrayLight } from './button';
-import { BsX } from 'react-icons/bs';
+import React, { ChangeEvent } from 'react'
+import { Modal } from './modal'
+import { ButtonBlue, ButtonGrayLight } from './button'
+import { BsX } from 'react-icons/bs'
+import { useTask } from '../../hooks/task'
+import { ITask } from '../../app/types/task'
 
 type Props = {
   show: boolean
   task?: ITask
 }
 export default function TaskCardEditor (prop: Props) {
-  const { handClose, handleSubmit, formData, setFormData } = useContext(Context)
+  const { handClose, handleSubmit, formData, setFormData } = useTask()
   const task = JSON.stringify(prop.task) != '{}' && prop.task?.id ? prop.task : undefined
 
   const handleChange = (event: ChangeEvent<any>) => {
     const target = event.target
-    const { name, value } = target;
+    const { name, value } = target
 
     if (name == 'file') {
       target.files
-      setFormData({ ...formData, [name]: target.files });
+      setFormData({ ...formData, [name]: target.files })
     } else {
-      setFormData({ ...formData, [name]: value });
+      setFormData({ ...formData, [name]: value })
     }
   }
 

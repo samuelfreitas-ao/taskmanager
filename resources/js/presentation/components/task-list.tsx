@@ -1,7 +1,7 @@
-import React, { useContext, useState } from 'react'
-import { ITask } from '../app/types/task'
+import React from 'react'
+import { ITask } from '../../app/types/task'
+import { useTask } from '../../hooks/task'
 
-import Context from './context'
 import TaskCard from './task-card'
 
 type Props = {
@@ -9,15 +9,13 @@ type Props = {
 }
 
 export default function TaskList (data: Props) {
-  const { handClose, setFormData, handleShowEditor, handleShowTask, handleShowdelete, setSelectedCard, selectedCard } = useContext(Context)
+  const { selectedCard } = useTask()
 
   return (
     <ul className=''>
       {data.tasks.length > 0 && data.tasks.map(task => (
         <li key={task.id} className='inline-block p-3'>
-          <Context.Provider value={{ handClose, setFormData, handleShowEditor, handleShowTask, handleShowdelete, setSelectedCard, selectedCard }}>
-            <TaskCard selected={selectedCard[task.id]} task={task} />
-          </Context.Provider>
+          <TaskCard selected={selectedCard[task.id]} task={task} />
         </li>
       ))}
     </ul>
