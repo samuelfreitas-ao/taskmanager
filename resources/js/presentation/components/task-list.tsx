@@ -8,16 +8,17 @@ type Props = {
   tasks: ITask[]
 }
 
-export default function TaskList (data: Props) {
+export default function TaskList({ tasks }: Props) {
   const { selectedCard } = useTask()
 
   return (
-    <ul className=''>
-      {data.tasks.length > 0 && data.tasks.map(task => (
-        <li key={task.id} className='inline-block p-3'>
-          <TaskCard selected={selectedCard[task.id]} task={task} />
-        </li>
-      ))}
+    <ul>
+      {tasks.length > 0 &&
+        tasks.map((task) => (
+          <li key={task.id} className="inline-block p-3">
+            <TaskCard selected={selectedCard[task.id]} task={task} />
+          </li>
+        ))}
     </ul>
   )
 }
@@ -26,6 +27,10 @@ type PropTitle = {
   text: string
   total: number
 }
-export function TaskTitile (data: PropTitle) {
-  return <div className="p-2 font-semibold border-b pb-2">{data.text} (<small>{data.total}</small>)</div>
+export function TaskTitle({ text, total }: PropTitle) {
+  return (
+    <div className="p-2 font-semibold border-b pb-2">
+      {text} (<small>{total}</small>)
+    </div>
+  )
 }

@@ -9,10 +9,8 @@ type Props = {
   show: boolean
   task?: ITask
 }
-export default function TaskCardEditor (prop: Props) {
+export default function TaskCardEditor({ show, task }: Props) {
   const { handClose, handleSubmit, formData, setFormData } = useTask()
-  const task = JSON.stringify(prop.task) != '{}' && prop.task?.id ? prop.task : undefined
-
   const handleChange = (event: ChangeEvent<any>) => {
     const target = event.target
     const { name, value } = target
@@ -26,48 +24,61 @@ export default function TaskCardEditor (prop: Props) {
   }
 
   return (
-    <Modal show={prop.show}>
-      <div className="bg-white px-6 py-8" style={{ width: '100%', maxWidth: '900px' }}>
-        <form action="" onSubmit={handleSubmit} className='grid gap-y-2'>
-          <div className="mb-2 pb-2 border-b font-semibold">{task ? 'Editar' : 'Nova'} tarefa {task && task.title}</div>
+    <Modal show={show}>
+      <div
+        className="bg-white px-6 py-8"
+        style={{ width: '100%', maxWidth: '900px' }}
+      >
+        <form action="" onSubmit={handleSubmit} className="grid gap-y-2">
+          <div className="mb-2 pb-2 border-b font-semibold">
+            {task ? 'Editar' : 'Nova'} tarefa {task && task.title}
+          </div>
           <div className="flex">
-            <input className='flex-1 focus:outline-none px-3 py-1 border rounded'
+            <input
+              className="flex-1 focus:outline-none px-3 py-1 border rounded"
               type="text"
-              name='title'
+              name="title"
               onChange={handleChange}
               defaultValue={task && task.title}
-              placeholder='Título' />
+              placeholder="Título"
+            />
           </div>
           <div className="flex">
-            <textarea className='flex-1 focus:outline-none px-3 py-1 border rounded'
-              name='description'
+            <textarea
+              className="flex-1 focus:outline-none px-3 py-1 border rounded"
+              name="description"
               onChange={handleChange}
               defaultValue={task && task.description}
-              placeholder='Descrição' />
+              placeholder="Descrição"
+            />
           </div>
           <div className="flex">
-            <input className='flex-1 focus:outline-none px-3 py-1 border rounded'
-              type='file'
+            <input
+              className="flex-1 focus:outline-none px-3 py-1 border rounded"
+              type="file"
               multiple
-              name='file'
-              onChange={handleChange} />
+              name="file"
+              onChange={handleChange}
+            />
           </div>
           <div className="flex">
-            <select className='flex-1 focus:outline-none px-3 py-1 border rounded'
-              name='status'
+            <select
+              className="flex-1 focus:outline-none px-3 py-1 border rounded"
+              name="status"
               onChange={handleChange}
-              defaultValue={task ? task.status : ''}>
-              <option value="" disabled>-Selecine-</option>
+              defaultValue={task ? task.status : ''}
+            >
+              <option value="" disabled>
+                -Selecione-
+              </option>
               <option>Pendente</option>
               <option>Activo</option>
               <option>Feito</option>
             </select>
           </div>
           <div className="flex gap-2">
-            <ButtonBlue type='submit'>
-              {task ? 'Salvar' : 'Criar'}
-            </ButtonBlue>
-            <ButtonGrayLight type='reset' onClick={handClose}>
+            <ButtonBlue type="submit">{task ? 'Salvar' : 'Criar'}</ButtonBlue>
+            <ButtonGrayLight type="reset" onClick={handClose}>
               Fechar
               <BsX />
             </ButtonGrayLight>
