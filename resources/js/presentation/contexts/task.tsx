@@ -2,14 +2,7 @@ import React from 'react'
 import { TaskController } from '../../app/controllers/TaskController'
 import { ITask } from '../../app/types/task'
 import { HttpClient } from '../../libs/http/http-client'
-import { NotificationType } from '../components/notification'
-
-type NotityProps = {
-  result: boolean
-  message: string
-  type: string
-  show: boolean
-}
+import { toast } from 'react-hot-toast'
 
 type selectedCardProps = [any, boolean]
 
@@ -26,8 +19,6 @@ type TaskContextProps = {
   selectedCard: selectedCardProps
   showModalDelete: boolean
   showModal: boolean
-  notify: NotityProps
-  setNotify: (notify: NotityProps) => void
   setShowModalDelete: (showModalDelete: boolean) => void
   setShowLoader: (showLoader: boolean) => void
   showLoader: boolean
@@ -47,7 +38,6 @@ type TaskProviderProps = {
 export const TaskContext = React.createContext({} as TaskContextProps)
 
 export const TaskProvider = ({ children }: TaskProviderProps) => {
-
   const [tasks, setTasks] = React.useState<ITask[]>([])
   const [loadingData, setLoadingData] = React.useState<boolean>(true)
   const [showLoader, setShowLoader] = React.useState<boolean>(false)
@@ -55,10 +45,11 @@ export const TaskProvider = ({ children }: TaskProviderProps) => {
   const [showModalDelete, setShowModalDelete] = React.useState<boolean>(false)
   const [showModalDetail, setShowModalDetail] = React.useState<boolean>(false)
   const [formData, setFormData] = React.useState<ITask>({} as ITask)
-  const [selectedCard, setSelectedCard] = React.useState<selectedCardProps>([0, false])
+  const [selectedCard, setSelectedCard] = React.useState<selectedCardProps>([
+    0,
+    false,
+  ])
   const [softDelete, setSoftDelete] = React.useState<boolean>(false)
-  const [notify, setNotify] = React.useState<NotityProps>({ result: false, message: '', type: '', show: false })
-
 
   const handleShowEditor = () => {
     setShowModal(true)
@@ -98,57 +89,54 @@ export const TaskProvider = ({ children }: TaskProviderProps) => {
       response = await TaskController.update(formData)
     }
 
-    console.log('response', response)
-
-    const type = response.result ? NotificationType.SUCCESS : NotificationType.ERROR
-    setNotify({ message: response.message, type, show: true, result: response.result })
-
     if (response.result) {
       handClose()
       loadTaskRequest()
+      toast.success(response.message)
+    } else {
+      toast.error(response.message)
     }
   }
 
   const handleSubmitDelete = async (e: React.FormEvent) => {
     e.preventDefault()
     const response = await TaskController.delete(formData.id, softDelete)
-    const type = response.result ? NotificationType.SUCCESS : NotificationType.ERROR
-
-    setNotify({ message: response.message, type, show: true, result: response.result })
-
     if (response.result) {
       handClose()
       loadTaskRequest()
+      toast.success(response.message)
+    } else {
+      toast.error(response.message)
     }
   }
 
   return (
-    <TaskContext.Provider value={{
-      formData,
-      handClose,
-      handleSubmit,
-      handleShowdelete,
-      handleShowEditor,
-      handleShowTask,
-      loadTaskRequest,
-      loadingData,
-      setFormData,
-      setShowLoader,
-      showLoader,
-      handleSubmitDelete,
-      setTasks,
-      tasks,
-      setSoftDelete,
-      softDelete,
-      showModalDetail,
-      notify,
-      setNotify,
-      selectedCard,
-      setSelectedCard,
-      setShowModalDelete,
-      showModal,
-      showModalDelete
-    }}>
+    <TaskContext.Provider
+      value={{
+        formData,
+        handClose,
+        handleSubmit,
+        handleShowdelete,
+        handleShowEditor,
+        handleShowTask,
+        loadTaskRequest,
+        loadingData,
+        setFormData,
+        setShowLoader,
+        showLoader,
+        handleSubmitDelete,
+        setTasks,
+        tasks,
+        setSoftDelete,
+        softDelete,
+        showModalDetail,
+        selectedCard,
+        setSelectedCard,
+        setShowModalDelete,
+        showModal,
+        showModalDelete,
+      }}
+    >
       {children}
     </TaskContext.Provider>
   )

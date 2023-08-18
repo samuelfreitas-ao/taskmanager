@@ -6,12 +6,11 @@ import TaskCardEditor from '../../components/task-card-editor'
 import { ButtonBlue } from '../../components/button'
 import { TaskCardDelete } from '../../components/task-card-delete'
 import TaskCardDetail from '../../components/task-card-detail'
-import Notification from '../../components/notification'
 import TaskBoardCard from '../../components/task-board-card'
 import { LoadingPage } from '../loading'
 import { useTask } from '../../../hooks/task'
 
-export function Tasks () {
+export function Tasks() {
   const {
     loadTaskRequest,
     loadingData,
@@ -21,10 +20,7 @@ export function Tasks () {
     showModalDelete,
     formData,
     showModal,
-    notify
   } = useTask()
-
-
 
   React.useEffect(() => {
     loadTaskRequest()
@@ -34,9 +30,10 @@ export function Tasks () {
   }
   return (
     <Layout>
-      <Notification message={notify.message} type={notify.type} show={notify.show} />
       <div>
-        <div className="mb-5 font-semibold text-3xl">Tarefas (<small>{tasks.length}</small>)</div>
+        <div className="mb-5 font-semibold text-3xl">
+          Tarefas (<small>{tasks.length}</small>)
+        </div>
         <div className="mb-2">
           <ButtonBlue onClick={handleShowEditor}>
             <BsPlusCircle />
@@ -45,23 +42,23 @@ export function Tasks () {
         </div>
         <TaskCardEditor show={showModal} task={formData} />
 
-        {showModalDelete &&
+        {showModalDelete && (
           <TaskCardDelete show={showModalDelete} task={formData} />
-        }
+        )}
 
-        {showModalDetail &&
+        {showModalDetail && (
           <TaskCardDetail show={showModalDetail} id={formData.id} />
-        }
-        {tasks.length < 1 ?
+        )}
+        {tasks.length < 1 ? (
           <div className="flex items-center gap-x-2 bg-blue-50 border border-blue-100 px-7 py-4 text-center">
             <BsInfoCircle />
             Nenhuma tarefa de momento. Comece a criar uma.
           </div>
-          :
+        ) : (
           <div className="">
             <TaskBoardCard tasks={tasks} />
           </div>
-        }
+        )}
       </div>
     </Layout>
   )
