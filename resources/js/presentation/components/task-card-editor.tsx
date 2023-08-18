@@ -31,7 +31,7 @@ export default function TaskCardEditor({ show, task }: Props) {
       >
         <form action="" onSubmit={handleSubmit} className="grid gap-y-2">
           <div className="mb-2 pb-2 border-b font-semibold">
-            {task ? 'Editar' : 'Nova'} tarefa {task && task.title}
+            {task?.id ? 'Editar' : 'Nova'} tarefa {task.title}
           </div>
           <div className="flex">
             <input
@@ -39,7 +39,7 @@ export default function TaskCardEditor({ show, task }: Props) {
               type="text"
               name="title"
               onChange={handleChange}
-              defaultValue={task && task.title}
+              defaultValue={task?.title || ''}
               placeholder="Título"
             />
           </div>
@@ -48,7 +48,7 @@ export default function TaskCardEditor({ show, task }: Props) {
               className="flex-1 focus:outline-none px-3 py-1 border rounded"
               name="description"
               onChange={handleChange}
-              defaultValue={task && task.description}
+              defaultValue={task?.description || ''}
               placeholder="Descrição"
             />
           </div>
@@ -66,7 +66,7 @@ export default function TaskCardEditor({ show, task }: Props) {
               className="flex-1 focus:outline-none px-3 py-1 border rounded"
               name="status"
               onChange={handleChange}
-              defaultValue={task ? task.status : ''}
+              defaultValue={task?.status || ''}
             >
               <option value="" disabled>
                 -Selecione-
@@ -77,7 +77,9 @@ export default function TaskCardEditor({ show, task }: Props) {
             </select>
           </div>
           <div className="flex gap-2">
-            <ButtonBlue type="submit">{task ? 'Salvar' : 'Criar'}</ButtonBlue>
+            <ButtonBlue type="submit">
+              {task?.id ? 'Salvar' : 'Criar'}
+            </ButtonBlue>
             <ButtonGrayLight type="reset" onClick={handClose}>
               Fechar
               <BsX />
