@@ -1,7 +1,7 @@
 import React from 'react'
 import { ITask } from '../../app/types/task'
 
-import TaskList, { TaskTitile as TaskListTitile } from './task-list'
+import TaskList, { TaskTitle } from './task-list'
 
 type Props = {
   tasks: ITask[]
@@ -14,16 +14,16 @@ export default function TaskBoradCard (data: Props) {
 
   return (
     <ul className="grid xl:grid-cols-3 lg:grid-cols-2 gap-2">
-      <li className='pending bg-gray-50'>
-        <TaskListTitile text='Pendente' total={taskPending.length} />
+      <li className="pending bg-gray-50">
+        <TaskTitle text="Pendente" total={taskPending.length} />
         <TaskList tasks={taskPending} />
       </li>
-      <li className='active bg-gray-50'>
-        <TaskListTitile text='Activo' total={taskActive.length} />
+      <li className="active bg-gray-50">
+        <TaskTitle text="Activo" total={taskActive.length} />
         <TaskList tasks={taskActive} />
       </li>
-      <li className='done bg-gray-50'>
-        <TaskListTitile text='Feito' total={taskDone.length} />
+      <li className="done bg-gray-50">
+        <TaskTitle text="Feito" total={taskDone.length} />
         <TaskList tasks={taskDone} />
       </li>
     </ul>
